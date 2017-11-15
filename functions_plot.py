@@ -10,11 +10,12 @@ sns.set(style="darkgrid")
 
 
 ## Figure heatmat input data
-def plot_input_data(data_path,file_name,output_path,format_type,normalized=False):
+def plot_input_data(data_path,file_name,output_path,format_type,normalized=False,output_name=None):
     """
     Plot input data (matrix)
     normalized = True or False (normalized by the maximum value of the input data)
     """
+    plots_folder = '%s/plots'%output_path
     M_max, M = check_format_input(data_path,file_name,format_type,return_M = True)
     plt.figure()
     plt.subplot(111,aspect='equal')
@@ -22,22 +23,34 @@ def plot_input_data(data_path,file_name,output_path,format_type,normalized=False
         plt.imshow(M/float(M_max), cmap=plt.cm.Oranges, interpolation="nearest")
         plt.colorbar()
         plt.title('Input data (normalized)')
-        plt.savefig('%s/input_data_normalized.png'%output_path)
-        print 'Saved input data plot in %s/input_data_normalized.png'%output_path
+        if(output_name!=None):
+            plt.savefig('%s/%s_input_data_normalized.png'%(plots_folder,output_name))
+            print 'Saved input data plot in %s/%s_input_data_normalized.png'%(plots_folder,output_name)
+        else:
+            plt.savefig('%s/input_data_normalized.png'%plots_folder)
+            print 'Saved input data plot in %s/input_data_normalized.png'%plots_folder
     else:
         plt.imshow(M, cmap=plt.cm.Oranges, interpolation="nearest")
         plt.colorbar()
         plt.title('Input data')
-        plt.savefig('%s/input_data.png'%output_path)
-        print 'Saved input data plot in %s/input_data.png'%output_path
+        if(output_name!=None):
+            plt.savefig('%s/%s_input_data.png'%(plots_folder,output_name))
+            print 'Saved input data plot in %s/%s_input_data.png'%(plots_folder,output_name)
+        else:
+            plt.savefig('%s/input_data.png'%plots_folder)
+            print 'Saved input data plot in %s/input_data.png'%plots_folder
     return()
 
 ## Figure PDs (density points) for dim 0, 1, 2 
-def plot_PDs(output_path,M_max,normalized=False):
+def plot_PDs(output_path,M_max,normalized=False,output_name=None):
     """
     normalized= True or False (normalized by the maximum value of the input data)
     """
-    data = pd.read_csv(output_path+'/outputs_PDS.csv',index_col = 0)
+    plots_folder = '%s/plots'%output_path
+    if(output_name!=None):
+        data = pd.read_csv(output_path+'/%s_PDS.csv'%output_name,index_col = 0)
+    else:
+        data = pd.read_csv(output_path+'/outputs_PDS.csv',index_col = 0)
     plt.figure(figsize=(15,5))
     if(normalized):
         for i in range(1,4):
@@ -50,8 +63,12 @@ def plot_PDs(output_path,M_max,normalized=False):
             plt.xlabel('birth'); plt.ylabel('death')
             plt.plot([0, 1], [0, 1], ls="--", c=".3")
         plt.suptitle('Persistence Diagrams')
-        plt.savefig('%s/PDs_normalized.png'%output_path)
-        print 'Saved PDs plots in %s/PDs_normalized.png'%output_path
+        if(output_name!=None):
+            plt.savefig('%s/%s_PDs_normalized.png'%(plots_folder,output_name))
+            print 'Saved PDs plots in %s/%s_PDs_normalized.png'%(plots_folder,output_name)
+        else:
+            plt.savefig('%s/PDs_normalized.png'%plots_folder)
+            print 'Saved PDs plots in %s/PDs_normalized.png'%plots_folder
     else:
         for i in range(1,4):
             plt.subplot(1,3,i, aspect='equal')
@@ -63,17 +80,25 @@ def plot_PDs(output_path,M_max,normalized=False):
             plt.xlabel('birth'); plt.ylabel('death')
             plt.plot([0, M_max], [0, M_max], ls="--", c=".3")
         plt.suptitle('Persistence Diagrams')
-        plt.savefig('%s/PDs.png'%output_path)
-        print 'Saved PDs plots in %s/PDs.png'%output_path
+        if(output_name!=None):
+            plt.savefig('%s/%s_PDs.png'%(plots_folder,output_name))
+            print 'Saved PDs plots in %s/%s_PDs.png'%(plots_folder,output_name)
+        else:
+            plt.savefig('%s/PDs.png'%plots_folder)
+            print 'Saved PDs plots in %s/PDs.png'%plots_folder
     return()
 
 ## Figure Barcodes for dim 0, 1, 2
-def plot_barcodes(output_path,M_max,normalized=False):
+def plot_barcodes(output_path,M_max,normalized=False,output_name=None):
     """
     given output_path plot barcodes for dim 0,1,2
     normalized= True or False (normalized by the maximum value of the input data) applied to the lenghts of bars
     """
-    data = pd.read_csv(output_path+'/outputs_PDS.csv',index_col = 0)
+    plots_folder = '%s/plots'%output_path 
+    if(output_name!=None):
+        data = pd.read_csv(output_path+'/%s_PDS.csv'%output_name,index_col = 0)
+    else:
+        data = pd.read_csv(output_path+'/outputs_PDS.csv',index_col = 0)
     plt.figure(figsize=(15,5))
     for j in range(1,4):
         plt.subplot(1,3,j)
@@ -91,16 +116,22 @@ def plot_barcodes(output_path,M_max,normalized=False):
             plt.xlabel('Normalized persistences')
             plt.legend([],loc=1,title='dim %i'%(j-1))
             plt.suptitle('Barcodes')
-            plt.savefig('%s/barcodes_normalized.png'%output_path)
+            if(output_name!=None):
+                plt.savefig('%s/%s_barcodes_normalized.png'%(plots_folder,output_name))
+                print 'Saved barcodes plots in %s/%s_barcodes_normalized.png'%(plots_folder,output_name)
+            else:
+                plt.savefig('%s/barcodes_normalized.png'%plots_folder)
+                print 'Saved barcodes plots in %s/barcodes_normalized.png'%plots_folder
             
         else:
             plt.xlim((0,M_max))
             plt.xlabel('persistence')
             plt.legend([],loc=1,title='dim %i'%(j-1))
             plt.suptitle('Barcodes')
-            plt.savefig('%s/barcodes.png'%output_path)
-    if(normalized):
-        print 'Saved barcodes plots in %s/barcodes_normalized.png'%output_path
-    else:
-        print 'Saved barcodes plots in %s/barcodes.png'%output_path
+            if(output_name!=None):
+                plt.savefig('%s/%s_barcodes.png'%(plots_folder,output_name))
+                print 'Saved barcodes plots in %s/%s_barcodes.png'%(plots_folder,output_name)
+            else:
+                plt.savefig('%s/barcodes.png'%plots_folder)
+                print 'Saved barcodes plots in %s/barcodes.png'%(plots_folder)
     return()

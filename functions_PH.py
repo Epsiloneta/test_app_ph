@@ -33,6 +33,8 @@ def check_format_input(data_path,file_name,format_type=None,return_M = False):
     format_type = 'gpickle', 'npy', 'csv', 'txt'
     return_M = False (we do not return input data), True (we return input data)
     """
+    print 'data path ',data_path
+    print 'file name ', file_name
     if(format_type == 'gpickle'):
         G = nx.read_gpickle(data_path+'/'+file_name)
         M = nx.adj_matrix(G).todense()
@@ -54,8 +56,10 @@ def check_format_input(data_path,file_name,format_type=None,return_M = False):
 
 
 
-def exec_ripser(data_path,ripser_path,output_path=None,input_file='tmp/input.txt'):
-    if(output_path == None): output_path = data_path
+def exec_ripser(data_path,ripser_path,output_path,input_file='tmp/input.txt'):
+    """
+    output_name = output name_ripser
+    """
     ############# RIPSER ####################
     # high dimension
     ## execfile ripser (OUTPUT from ripser)
@@ -68,6 +72,8 @@ def exec_ripser(data_path,ripser_path,output_path=None,input_file='tmp/input.txt
     stop = timeit.default_timer()
     print 'Ripser execution time '
     print stop - start 
+    print 'to remove ','%s/input.txt'%data_path
+    os.remove('%s/input.txt'%data_path) ## \todo this file is not removed.
     return()
 
 
@@ -105,7 +111,7 @@ def ripser_PDs_dim(data,dim=2):
     return(h_start,h_end)
 
 
-def read_ripser_output(output_path):
+def read_ripser_output(output_path,output_name=None):
     """
     read ripser output file and convert to pandas. Save as csv
     """
@@ -124,17 +130,24 @@ def read_ripser_output(output_path):
         d['dimH'] = dimH
         holes[dimH] = d 
     data_pds = pd.concat(holes.values())
-    data_pds.to_csv('%s/outputs_PDS.csv'%output_path) ## save pandas file with PDs for dim 0,1,2
-    print 'Saved results in %s/outputs_PDS.csv'%output_path
+    if(output_name!=None):
+        data_pds.to_csv('%s/%s_PDS.csv'%(output_path,output_name)) ## save pandas file with PDs for dim 0,1,2
+        print 'Saved results in %s/%s_PDS.csv'%(output_path,output_name)
+    else:
+        data_pds.to_csv('%s/outputs_PDS.csv'%output_path) ## save pandas file with PDs for dim 0,1,2
+        print 'Saved results in %s/outputs_PDS.csv'%output_path
     return()
 
-def summary_output(output_path,M_shape,M_max):
+def summary_output(output_path,M_shape,M_max,output_name=None):
     """
     Summary of data: number points / nodes, range values of data, summary holes of dim 0,1,2 and number of important (def important in 3 levels: 25,50,75) holes according its persistence
     outpath
     M_shape, M_max
     """
-    data = pd.read_csv(output_path+'/outputs_PDS.csv',index_col = 0) ## index_col to avoid generate a new indexed column
+    if(output_name!=None):
+        data = pd.read_csv(output_path+'/%s_PDS.csv'%output_name,index_col = 0) ## index_col to avoid generate a new indexed column
+    else:
+        data = pd.read_csv(output_path+'/outputs_PDS.csv',index_col = 0) ## index_col to avoid generate a new indexed column
     data_ripser = open('%s/output_ripser.txt'%output_path,'rb').readlines()
     value_range = eval(data_ripser[1].rstrip().split(' ')[-1])
     summary_file = open(output_path+'/summary.txt','wb')
