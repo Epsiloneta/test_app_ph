@@ -25,7 +25,7 @@ def _to_lower_matrix(data_path,M,shape_M):
     file_input.close()
     return()
 
-def check_format_input(data_path,file_name,format_type=None,return_M = False):
+def check_format_input(data_path,file_name,format_type=None,return_M = False,create_input_file=True):
     """
     open file given a format and create input file for Ripser
     data_path : path of data to read
@@ -46,8 +46,9 @@ def check_format_input(data_path,file_name,format_type=None,return_M = False):
         M = np.loadtxt(data_path+'/'+file_name,delimiter=',')
     # \todo try shape[0] == shape[1]
     shape_M = M.shape[0]
-    _to_lower_matrix(data_path,M,shape_M)
-    print 'input file created in %s/input.txt'%data_path
+    if(create_input_file):
+        _to_lower_matrix(data_path,M,shape_M)
+        print 'input file created in %s/input.txt'%data_path
     if(return_M):
         return(np.max(M),M)    
     else:
@@ -56,7 +57,7 @@ def check_format_input(data_path,file_name,format_type=None,return_M = False):
 
 
 
-def exec_ripser(data_path,ripser_path,output_path,input_file='tmp/input.txt'):
+def exec_ripser(data_path,ripser_path,output_path,max_dim,input_file='tmp/input.txt'):
     """
     output_name = output name_ripser
     """
@@ -66,14 +67,13 @@ def exec_ripser(data_path,ripser_path,output_path,input_file='tmp/input.txt'):
     im = os.getcwd()
     os.chdir(ripser_path)
     start = timeit.default_timer() 
-    os.system('./ripser --format lower-distance --dim 2 %s/%s > %s/output_ripser.txt'%(data_path,input_file,output_path))
+    os.system('./ripser --format lower-distance --dim %i %s/%s > %s/output_ripser.txt'%(max_dim,data_path,input_file,output_path))
     # os.chdir(data_path)
     os.chdir(im)
     stop = timeit.default_timer()
     print 'Ripser execution time '
     print stop - start 
-    print 'to remove ','%s/input.txt'%data_path
-    os.remove('%s/input.txt'%data_path) ## \todo this file is not removed.
+    os.remove('%s/input.txt'%data_path)  ## remove auxiliar file with lower matrix used as input for Ripser
     return()
 
 
@@ -111,16 +111,17 @@ def ripser_PDs_dim(data,dim=2):
     return(h_start,h_end)
 
 
-def read_ripser_output(output_path,output_name=None):
+def read_ripser_output(output_path,max_dim,output_name=None):
     """
     read ripser output file and convert to pandas. Save as csv
+    max_dim: max homology dimension computed
     """
     # \todo add persistence by density (columns pers by threshold and column pers by dens) ## only needed if input weighted network
     data = open('%s/output_ripser.txt'%output_path,'rb').readlines()
     value_range = eval(data[1].rstrip().split(' ')[-1])
-    # dimH = 2
     holes = dict() ## save holes by dimension (birth, death, persistence)
-    for dimH in [0,1,2]:
+    for dimH in range(0,max_dim+1):#[0,1,2]:
+        print 'dimH ', dimH
         h_start, h_end = ripser_PDs_dim(data,dim=dimH)
         pers = np.array(h_end)-np.array(h_start)
         d = pd.DataFrame()
@@ -138,26 +139,28 @@ def read_ripser_output(output_path,output_name=None):
         print 'Saved results in %s/outputs_PDS.csv'%output_path
     return()
 
-def summary_output(output_path,M_shape,M_max,output_name=None):
+def summary_output(output_path,M_shape,M_max,max_dim,output_name=None):
     """
     Summary of data: number points / nodes, range values of data, summary holes of dim 0,1,2 and number of important (def important in 3 levels: 25,50,75) holes according its persistence
     outpath
     M_shape, M_max
+    max_dim: max homology dimension computed
     """
     if(output_name!=None):
         data = pd.read_csv(output_path+'/%s_PDS.csv'%output_name,index_col = 0) ## index_col to avoid generate a new indexed column
+        summary_file = open(output_path+'/%s_summary.txt'%output_name,'wb')
     else:
         data = pd.read_csv(output_path+'/outputs_PDS.csv',index_col = 0) ## index_col to avoid generate a new indexed column
+        summary_file = open(output_path+'/summary.txt','wb')
     data_ripser = open('%s/output_ripser.txt'%output_path,'rb').readlines()
     value_range = eval(data_ripser[1].rstrip().split(' ')[-1])
-    summary_file = open(output_path+'/summary.txt','wb')
     summary_file.write('Number of nodes/points:%i\n'%M_shape)
     summary_file.write('value range:[%f,%f]\n'%(value_range[0],value_range[1]))
 
-    for i in range(3):
+    for i in range(max_dim+1):
         summary_file.write('Detected %i dim holes: %i\n'%(i,len(data[data.dimH==i])))
     summary_file.write('---------------------------------------------------\n')
-    for i in range(3):
+    for i in range(max_dim+1):
         v = data[data.dimH==i].persistence.values
         num_significant_75 = sum(v>M_max*.75)
         num_significant_50 = sum(v>M_max*.5)
@@ -167,5 +170,9 @@ def summary_output(output_path,M_shape,M_max,output_name=None):
         summary_file.write('%i dim holes greater 25%% across time persistence: %i\n'%(i,num_significant_25))
         summary_file.write('---------------------------------------------------\n')
     summary_file.close()
-    print 'Summary file saved in %s/summary.txt'%output_path
+    if(output_name!=None):
+        print 'Summary file saved in %s/%s_summary.txt'%(output_path,output_name)
+    else:
+        print 'Summary file saved in %s/summary.txt'%output_path
+    os.remove('%s/output_ripser.txt'%output_path) ## remove file generated by Ripser
     return()

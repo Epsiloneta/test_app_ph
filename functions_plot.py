@@ -15,11 +15,17 @@ def plot_input_data(data_path,file_name,output_path,format_type,normalized=False
     Plot input data (matrix)
     normalized = True or False (normalized by the maximum value of the input data)
     """
+    print '------------------------------------'
+    print 'output_path ', output_path
     plots_folder = '%s/plots'%output_path
-    M_max, M = check_format_input(data_path,file_name,format_type,return_M = True)
+    print 'plots_folder ',plots_folder
+    print '------------------------------------'
+    M_max, M = check_format_input(data_path,file_name,format_type,return_M = True,create_input_file=False)
     plt.figure()
     plt.subplot(111,aspect='equal')
     if(normalized):
+        print 'plots_folder ',plots_folder
+        print 'output_name ',output_name
         plt.imshow(M/float(M_max), cmap=plt.cm.Oranges, interpolation="nearest")
         plt.colorbar()
         plt.title('Input data (normalized)')
@@ -30,6 +36,9 @@ def plot_input_data(data_path,file_name,output_path,format_type,normalized=False
             plt.savefig('%s/input_data_normalized.png'%plots_folder)
             print 'Saved input data plot in %s/input_data_normalized.png'%plots_folder
     else:
+        print 'not normalized'
+        print 'plots_folder ',plots_folder
+        print 'output_name ',output_name
         plt.imshow(M, cmap=plt.cm.Oranges, interpolation="nearest")
         plt.colorbar()
         plt.title('Input data')
@@ -42,7 +51,7 @@ def plot_input_data(data_path,file_name,output_path,format_type,normalized=False
     return()
 
 ## Figure PDs (density points) for dim 0, 1, 2 
-def plot_PDs(output_path,M_max,normalized=False,output_name=None):
+def plot_PDs(output_path,M_max,max_dim,normalized=False,output_name=None):
     """
     normalized= True or False (normalized by the maximum value of the input data)
     """
@@ -51,10 +60,11 @@ def plot_PDs(output_path,M_max,normalized=False,output_name=None):
         data = pd.read_csv(output_path+'/%s_PDS.csv'%output_name,index_col = 0)
     else:
         data = pd.read_csv(output_path+'/outputs_PDS.csv',index_col = 0)
-    plt.figure(figsize=(15,5))
+    fig_size_aux = 15/(3-max_dim)
+    plt.figure(figsize=(fig_size_aux,5))
     if(normalized):
-        for i in range(1,4):
-            plt.subplot(1,3,i, aspect='equal')
+        for i in range(1,max_dim+2):
+            plt.subplot(1,max_dim+1,i, aspect='equal')
             plt.plot(data[data.dimH==i-1].birth.values/np.float(M_max),data[data.dimH==i-1].death.values/np.float(M_max),'bo',alpha=.3,label='dim %i'%(i-1))
             plt.xlim((0,1)); plt.ylim((0,1))
             frame = plt.legend(loc=4,frameon=True,title='normalized')
@@ -70,8 +80,8 @@ def plot_PDs(output_path,M_max,normalized=False,output_name=None):
             plt.savefig('%s/PDs_normalized.png'%plots_folder)
             print 'Saved PDs plots in %s/PDs_normalized.png'%plots_folder
     else:
-        for i in range(1,4):
-            plt.subplot(1,3,i, aspect='equal')
+        for i in range(1,max_dim+2):
+            plt.subplot(1,max_dim+1,i, aspect='equal')
             plt.plot(data[data.dimH==i-1].birth.values,data[data.dimH==i-1].death.values,'bo',alpha=.3,label='dim %i'%(i-1))
             plt.xlim((0,M_max)); plt.ylim((0,M_max))
             frame = plt.legend(loc=4,frameon=True)
@@ -89,7 +99,7 @@ def plot_PDs(output_path,M_max,normalized=False,output_name=None):
     return()
 
 ## Figure Barcodes for dim 0, 1, 2
-def plot_barcodes(output_path,M_max,normalized=False,output_name=None):
+def plot_barcodes(output_path,M_max,max_dim,normalized=False,output_name=None):
     """
     given output_path plot barcodes for dim 0,1,2
     normalized= True or False (normalized by the maximum value of the input data) applied to the lenghts of bars
@@ -99,9 +109,10 @@ def plot_barcodes(output_path,M_max,normalized=False,output_name=None):
         data = pd.read_csv(output_path+'/%s_PDS.csv'%output_name,index_col = 0)
     else:
         data = pd.read_csv(output_path+'/outputs_PDS.csv',index_col = 0)
-    plt.figure(figsize=(15,5))
-    for j in range(1,4):
-        plt.subplot(1,3,j)
+    fig_size_aux = 15/(3-max_dim)
+    plt.figure(figsize=(fig_size_aux,5))
+    for j in range(1,max_dim+2):
+        plt.subplot(1,max_dim+1,j)
         m_max = np.max(data[data.dimH==j-1].death.values)
         L = len(data[data.dimH==j-1].death.values)
         factor=np.sqrt(L);

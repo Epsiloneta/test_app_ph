@@ -3,9 +3,10 @@ import numpy as np
 import networkx as nx 
 import pickle as pk 
 
-M = np.random.random((100, 100))*5
-for i in range(100):
-    for j in range(i,100):
+size = 20
+M = np.random.random((size,size))*5
+for i in range(size):
+    for j in range(i,size):
         M[j,i] = M[i,j]
         if(i==j):
             M[i,i]=0
