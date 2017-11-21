@@ -1,5 +1,6 @@
 import Tkinter as tk
 
+from function_main import main_test
 
 # from Tkinter import Tk
 # from tkFileDialog import askopenfilename
@@ -43,10 +44,9 @@ class Application(tk.Frame):
         self.format_file.grid(row=2, column=1)
 
         ## Execute programm button ##
-        self.execute_button = tk.Button(self)
+        self.execute_button = tk.Button(self,command=self.launch_computation)
         self.execute_button["text"] = "Run programm"
         self.execute_button["fg"]   = "blue"
-        # self.data_path["command"] =  self.askopenfilename()
         # self.data_path.pack({"side": "left"})
         self.execute_button.grid(row=0, column=3)
         ## ----------------------------------------------------------
@@ -71,18 +71,18 @@ class Application(tk.Frame):
         self.output_folder.grid(row=0, column=2)
         ## ----------------------------------------------------------
         ## generate plots
-        plots_on = tk.BooleanVar()
-        plots_on.set(True)
-        self.plots = tk.Checkbutton(self,text ='Generate Plots',variable = plots_on)
+        self.plots_on = tk.BooleanVar()
+        self.plots_on.set(True)
+        self.plots = tk.Checkbutton(self,text ='Generate Plots',variable = self.plots_on)
         self.plots.grid(row=2, column=2)
         # self.plots
         # \todo ficar per defecte True
         # self.plots["command"] =  self.askopenfilename()
         ## ----------------------------------------------------------
         ## plots normalized
-        plots_norm = tk.BooleanVar()
-        plots_norm.set(True)
-        self.plots_n = tk.Checkbutton(self,text ='Normalized plots',variable = plots_norm)
+        self.plots_norm = tk.BooleanVar()
+        self.plots_norm.set(False)
+        self.plots_n = tk.Checkbutton(self,text ='Normalized plots',variable = self.plots_norm)
         self.plots_n.grid(row=3, column=2)
         # self.plots
         # \todo ficar per defecte True
@@ -93,11 +93,30 @@ class Application(tk.Frame):
         ## max dimension to compute persistent homology
         self.lab_dim_max = tk.Label(self,text="Max dimension to compute\n persistent homology")
         self.lab_dim_max.grid(row=1, column=0)
-        self.listbox = tk.Listbox(self)
-        self.listbox.grid(row=2, column=0)
+        # \TODO change listboxes to radiobuttons: http://www.tkdocs.com/tutorial/widgets.html
+        self.list_dim_max = tk.Listbox(self)
+        self.list_dim_max.grid(row=2, column=0)
         for item in ["0", "1", "2"]:
-            self.listbox.insert(tk.END, item)
+            self.list_dim_max.insert(tk.END, item)
         # \todo get active dim 1
+
+    def launch_computation(self):
+        print 'launching...'
+
+        # get maximum dimension
+        #index = self.list_dim_max.curselection()
+        #dim_max = self.list_dim_max.get(index)
+        dim_max = 0
+        # get format file
+        index = self.format_file.curselection()
+        format_file = self.format_file.get(index)
+
+        main_test(a=4,b=[1,4],
+            plots_norm=self.plots_norm.get(),
+            plots=self.plots_on.get(),
+            max_dim=dim_max,
+            format_file=format_file
+            )
 
 
 

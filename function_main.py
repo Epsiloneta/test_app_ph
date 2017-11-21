@@ -20,6 +20,10 @@ computer = os.getlogin()
 ripser_path = '/home/%s/Software/ripser'%computer
 ##########################################################
 
+def main_test(**kwarg):
+    print kwarg
+
+
 def main_function(data_path,format_type,file_name=None,lower_matrix = False, upper_matrix = False, output_path=None,plots_on=True,normalized=False,max_dim=1):
     """
     data_path: folder path where data is. It will be used as folder where there are all files to compute PH
@@ -31,7 +35,7 @@ def main_function(data_path,format_type,file_name=None,lower_matrix = False, upp
         Example: 'test_M.txt' (by default: None)
     output_path: path to save results, if None then output_path will be in data_path (by default: None)
     lower_matrix: (True or False), if the files are directly lower matrices just to pass to ripser (for large datasets)
-    upper_matrix: (True or False), if the files are directly lower matrices just to pass to ripser (for large datasets)
+    upper_matrix: (True or False), if the files are directly upper matrices just to pass to ripser (for large datasets)
     plots_on: True or False. Decide if you want to generate also plots of the results. It includes: plot input data, plot persistence diagrams depending max_dim choosen(dim 0,1,2), plot barcodes (dim 0,1,2). Persistent diagrams and barcodes are completelly equivalents. If True a folder plots will be generated in your output_path (by default: True)
     normalized: if you have plots_on = True, then you can choose if you want normalized or not plots (divided by the max value in the input data). Plots generated under normalized = True and normalized = False will be saved with different names, then you can do both options  (by default: False)
     max_dim: maximum dimension to compute homology (we only accept dim 0, 1, 2). Plots will be according max_dim chosen. (by default: 1)
