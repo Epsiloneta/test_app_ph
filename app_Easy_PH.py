@@ -20,7 +20,7 @@ class Application(tk.Frame):
         self.master.title("Easy Persistent Homology")
         # self.pack(fill=tk.BOTH, expand=1)
         # self.pack()
-        self.grid(row=0,column=0,columnspan=3,rowspan=4)
+        self.grid(row=0,column=0,columnspan=4,rowspan=6)
         self.createWidgets()
         self.createWidgets_optional()
 
@@ -37,13 +37,24 @@ class Application(tk.Frame):
         self.lab_format_files = tk.Label(self,text="Format file/s")
         self.lab_format_files.grid(row=1, column=1)
         self.format_file = tk.Listbox(self)
-        for item in ["gpickle", "npy", "txt","csv"]:
+        for item in ["gpickle", "npy", "txt","csv","txt (lower dist-matrix)","txt (upper dist-matrix)"]:
             self.format_file.insert(tk.END, item)
         # self.format_file["command"] =  self.askopenfilename()
         self.format_file.grid(row=2, column=1)
+
+        ## Execute programm button ##
+        self.execute_button = tk.Button(self)
+        self.execute_button["text"] = "Run programm"
+        self.execute_button["fg"]   = "blue"
+        # self.data_path["command"] =  self.askopenfilename()
+        # self.data_path.pack({"side": "left"})
+        self.execute_button.grid(row=0, column=3)
         ## ----------------------------------------------------------
 
     def createWidgets_optional(self):
+        ## label results 
+        self.lab_results = tk.Label(self,text="Results")
+        self.lab_results.grid(row=1, column=2)
         ## ------------- OPTIONAL ----------------------------------
         ## select specific file to analyse
         self.data_file = tk.Button(self)
@@ -63,7 +74,7 @@ class Application(tk.Frame):
         plots_on = tk.BooleanVar()
         plots_on.set(True)
         self.plots = tk.Checkbutton(self,text ='Generate Plots',variable = plots_on)
-        self.plots.grid(row=3, column=0)
+        self.plots.grid(row=2, column=2)
         # self.plots
         # \todo ficar per defecte True
         # self.plots["command"] =  self.askopenfilename()
@@ -72,7 +83,7 @@ class Application(tk.Frame):
         plots_norm = tk.BooleanVar()
         plots_norm.set(True)
         self.plots_n = tk.Checkbutton(self,text ='Normalized plots',variable = plots_norm)
-        self.plots_n.grid(row=4, column=0)
+        self.plots_n.grid(row=3, column=2)
         # self.plots
         # \todo ficar per defecte True
         # self.plots["command"] =  self.askopenfilename()
