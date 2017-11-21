@@ -17,6 +17,7 @@ def _to_lower_matrix(data_path,M,shape_M):
     from a full matrix create a lower matrix (without diagonal) and save it to a .txt file
     """
     ## lower matrix file
+    print 'data path ', '%s/input.txt'%data_path
     file_input = open('%s/input.txt'%data_path,'wb')
     for i in range(1,shape_M):
         for j in range(0,i):
@@ -25,7 +26,7 @@ def _to_lower_matrix(data_path,M,shape_M):
     file_input.close()
     return()
 
-def check_format_input(data_path,file_name,format_type=None,return_M = False,create_input_file=True):
+def check_format_input(data_path,file_name,lower_matrix,upper_matrix,format_type=None,return_M = False,create_input_file=True):
     """
     open file given a format and create input file for Ripser
     data_path : path of data to read
@@ -33,33 +34,44 @@ def check_format_input(data_path,file_name,format_type=None,return_M = False,cre
     format_type = 'gpickle', 'npy', 'csv', 'txt'
     return_M = False (we do not return input data), True (we return input data)
     """
-    print 'data path ',data_path
-    print 'file name ', file_name
-    if(format_type == 'gpickle'):
-        G = nx.read_gpickle(data_path+'/'+file_name)
-        M = nx.adj_matrix(G).todense()
-    if(format_type == 'npy'):
-        M = np.load(data_path+'/'+file_name)
-    if(format_type == 'csv' or format_type == 'txt'):
-        # np.savetxt('a.txt',a,delimiter=',',newline='\n')
-        # np.savetxt("a.csv", a, delimiter=",")
-        M = np.loadtxt(data_path+'/'+file_name,delimiter=',')
-    # \todo try shape[0] == shape[1]
-    shape_M = M.shape[0]
-    if(create_input_file):
-        _to_lower_matrix(data_path,M,shape_M)
-        print 'input file created in %s/input.txt'%data_path
+    if(upper_matrix or lower_matrix):
+        max_val = 0; shape_M = 1
+        with open(data_path+'/'+file_name,'r') as f:
+            for lin in f:
+                shape_M = shape_M +1
+                lin = lin.strip().split(',')
+                if(lin[-1]==''):
+                    lin = lin[:-1]
+                aux = np.max(map(float,lin))
+                if(aux > max_val):
+                    max_val = aux
+    else: ## create lower matrix
+        if(format_type == 'gpickle'):
+            G = nx.read_gpickle(data_path+'/'+file_name)
+            M = nx.adj_matrix(G).todense()
+        if(format_type == 'npy'):
+            M = np.load(data_path+'/'+file_name)
+        if(format_type == 'csv' or format_type == 'txt'):
+            # np.savetxt('a.txt',a,delimiter=',',newline='\n')
+            # np.savetxt("a.csv", a, delimiter=",")
+            M = np.loadtxt(data_path+'/'+file_name,delimiter=',')
+        # \todo try shape[0] == shape[1]
+        shape_M = M.shape[0]
+        max_val = np.max(M)
+        if(create_input_file):
+            _to_lower_matrix(data_path,M,shape_M)
     if(return_M):
-        return(np.max(M),M)    
+        return(max_val,M)    
     else:
-        return(np.max(M),shape_M)    
+        return(max_val,shape_M)  
     return()
 
 
 
-def exec_ripser(data_path,ripser_path,output_path,max_dim,input_file='tmp/input.txt'):
+def exec_ripser(data_path,ripser_path,output_path,max_dim,input_file='input.txt',format_file = 'lower-distance'):
     """
     output_name = output name_ripser
+    format_file = 'lower-distance', 'upper-distance'
     """
     ############# RIPSER ####################
     # high dimension
@@ -67,13 +79,15 @@ def exec_ripser(data_path,ripser_path,output_path,max_dim,input_file='tmp/input.
     im = os.getcwd()
     os.chdir(ripser_path)
     start = timeit.default_timer() 
-    os.system('./ripser --format lower-distance --dim %i %s/%s > %s/output_ripser.txt'%(max_dim,data_path,input_file,output_path))
+    print 'input_file ',input_file
+    os.system('./ripser --format %s --dim %i %s/%s > %s/output_ripser.txt'%(format_file,max_dim,data_path,input_file,output_path))
     # os.chdir(data_path)
     os.chdir(im)
     stop = timeit.default_timer()
     print 'Ripser execution time '
     print stop - start 
-    os.remove('%s/input.txt'%data_path)  ## remove auxiliar file with lower matrix used as input for Ripser
+    if(os.path.isfile('%s/input.txt'%data_path)):
+        os.remove('%s/input.txt'%data_path)  ## remove auxiliar file with lower matrix used as input for Ripser
     return()
 
 

@@ -1,3 +1,4 @@
+
 ### Plot functions ###
 import pickle as pk
 import networkx as nx
@@ -10,22 +11,25 @@ sns.set(style="darkgrid")
 
 
 ## Figure heatmat input data
-def plot_input_data(data_path,file_name,output_path,format_type,normalized=False,output_name=None):
+def plot_input_data(data_path,file_name,plots_folder,format_type,lower_matrix,upper_matrix,normalized=False,output_name=None):
     """
     Plot input data (matrix)
+    data_path: where data is
+        Example: '/home/esther/Dropbox/ISI_Esther/Easy_PH/'
+    file_name: file with data to plot
+        Example: 'test1.txt'
+    plots_folder: path inside ouputpath where plots are saved
+        Example: '/home/esther/Dropbox/ISI_Esther/Easy_PH/results/plots/''
+    format_type: format of data files (txt,npy,gpickle,csv)
+        Example: 'txt'
+    lower_matrix and upper_matrix: boolean (True or False) in case that your data is given by a lower / upper matrix (without diagonal) in a txt format. Usally when your data is too big to open as a matrix and load all the matrix in the memory. Both values are by default False.
     normalized = True or False (normalized by the maximum value of the input data)
+    output_name: if we are computing PH on a set of files the output names of the plots will be the name of the data file + identification of the plot.
     """
-    print '------------------------------------'
-    print 'output_path ', output_path
-    plots_folder = '%s/plots'%output_path
-    print 'plots_folder ',plots_folder
-    print '------------------------------------'
-    M_max, M = check_format_input(data_path,file_name,format_type,return_M = True,create_input_file=False)
+    M_max, M = check_format_input(data_path,file_name,lower_matrix,upper_matrix,format_type,return_M = True,create_input_file=False)
     plt.figure()
     plt.subplot(111,aspect='equal')
     if(normalized):
-        print 'plots_folder ',plots_folder
-        print 'output_name ',output_name
         plt.imshow(M/float(M_max), cmap=plt.cm.Oranges, interpolation="nearest")
         plt.colorbar()
         plt.title('Input data (normalized)')
@@ -36,9 +40,6 @@ def plot_input_data(data_path,file_name,output_path,format_type,normalized=False
             plt.savefig('%s/input_data_normalized.png'%plots_folder)
             print 'Saved input data plot in %s/input_data_normalized.png'%plots_folder
     else:
-        print 'not normalized'
-        print 'plots_folder ',plots_folder
-        print 'output_name ',output_name
         plt.imshow(M, cmap=plt.cm.Oranges, interpolation="nearest")
         plt.colorbar()
         plt.title('Input data')
@@ -113,7 +114,6 @@ def plot_barcodes(output_path,M_max,max_dim,normalized=False,output_name=None):
     plt.figure(figsize=(fig_size_aux,5))
     for j in range(1,max_dim+2):
         plt.subplot(1,max_dim+1,j)
-        m_max = np.max(data[data.dimH==j-1].death.values)
         L = len(data[data.dimH==j-1].death.values)
         factor=np.sqrt(L);
         for i,pair in enumerate(zip(data[data.dimH==j-1].birth.values,data[data.dimH==j-1].death.values)):
