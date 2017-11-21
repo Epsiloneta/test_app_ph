@@ -55,8 +55,9 @@ def check_format_input(data_path,file_name,lower_matrix,upper_matrix,format_type
             # np.savetxt('a.txt',a,delimiter=',',newline='\n')
             # np.savetxt("a.csv", a, delimiter=",")
             M = np.loadtxt(data_path+'/'+file_name,delimiter=',')
-        # \todo try shape[0] == shape[1]
         shape_M = M.shape[0]
+        if(shape_M != M.shape[1]):
+            raise Exception('Data input is not a square matrix!!!')
         max_val = np.max(M)
         if(create_input_file):
             _to_lower_matrix(data_path,M,shape_M)

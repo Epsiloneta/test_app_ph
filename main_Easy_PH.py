@@ -50,8 +50,6 @@ file_name = 'test1.txt'
 
 max_dim = 1
 
-# \TODO try with a dataset with no holes in some dim 
-
 
 # ---------------------------------------------------------------------------------------------------
 # ## parameters Paolo Moretti data
@@ -68,7 +66,15 @@ max_dim = 1
 # # ## one file
 # main_function(data_path,'txt',max_dim=max_dim,file_name = file_name,lower_matrix = True, output_path=None,plots_on=True) 
 # # ## folder files
-main_function(data_path,'txt',max_dim=max_dim,lower_matrix = True, output_path=None,plots_on=True) 
+# main_function(data_path,'txt',max_dim=max_dim,lower_matrix = True, output_path=None,plots_on=True) 
+
+
+## ba matrices 
+data_path = '/home/esther/Documents/data_paolo_moretti/ba_graphs/'
+ripser_path = '/home/%s/Software/ripser'%computer
+max_dim = 1
+main_function(data_path,'gpickle',max_dim=max_dim, output_path=None,plots_on =False) 
+
 
 # ---------------------------------------------------------------------------------------------------
 

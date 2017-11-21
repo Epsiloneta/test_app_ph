@@ -51,8 +51,6 @@ def main_function(data_path,format_type,file_name=None,lower_matrix = False, upp
     if(file_name!=None):
         ## Check input and read it
         M_max, M_shape = check_format_input(data_path,file_name,lower_matrix,upper_matrix,format_type=format_type)
-        # \TODO check_format_input 
-        # \TODO exec_ripser
         ## Execfile Ripser (for dim 0,1,2) depending on upper / lower format if input matrix in this way
         if(upper_matrix or lower_matrix):
             if(upper_matrix):
