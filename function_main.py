@@ -17,8 +17,8 @@ from functions_plot import *
 # \TODO solve to put this here
 # \TODO adapt '\' for windows
 ##########################################################
-computer = os.getlogin()
-ripser_path = '/home/%s/Software/ripser'%computer
+userhome = os.path.expanduser('~')
+ripser_path = os.path.join(userhome,'Software/ripser')
 ##########################################################
 
 def main_test(**kwarg):
