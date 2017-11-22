@@ -1,4 +1,6 @@
 import Tkinter as tk
+import tkFileDialog
+# from tkFileDialog import askopenfilename
 
 from function_main import main_test
 
@@ -9,6 +11,26 @@ from function_main import main_test
 # Tk.Tk().withdraw() # we don't want a full GUI, so keep the root window from appearing
 # filename = askopenfilename() # show an "Open" dialog box and return the path to the selected file
 # print(filename)
+
+
+# def browse_button(self, which="out"):
+#     # Allow user to select a directory and store it in global var
+#     # called folder_path
+#     # global folder_path
+#     filename = tkFileDialog.askdirectory()
+#     if which == "in":
+#         self.folder_path.set(filename)
+#     elif which == "out":
+#         self.folder_path2.set(filename)
+#     print(filename)
+
+
+# root = Tk()
+# folder_path = StringVar()
+# lbl1 = Label(master=root,textvariable=folder_path)
+# lbl1.grid(row=0, column=1)
+# button2 = Button(text="Browse", command=browse_button)
+# button2.grid(row=0, column=3)
 
 
 class Application(tk.Frame):
@@ -25,40 +47,57 @@ class Application(tk.Frame):
         self.createWidgets()
         self.createWidgets_optional()
 
+
+    def browse_button_input(self):
+        # Allow user to select a directory and store it in global var
+        # called folder_path
+        # global folder_path_input
+        filename = tkFileDialog.askdirectory()
+        self.folder_path_input.set(filename)
+        print(filename)
+
+    def browse_button_output(self):
+        # Allow user to select a directory and store it in global var
+        # called folder_path
+        # global folder_path_output
+        filename = tkFileDialog.askdirectory()
+        self.folder_path_output.set(filename)
+        print(filename)
+
     def createWidgets(self):
         
-        self.data_path = tk.Button(self)
-        self.data_path["text"] = "Folder data"
-        self.data_path["fg"]   = "black"
-        # self.data_path["command"] =  self.askopenfilename()
-        # self.data_path.pack({"side": "left"})
-        self.data_path.grid(row=0, column=0)
+        # ## si cliques s'obre askdirectory
+        # self.data_path = tk.Button(self,command=browse_button)
+        # self.data_path["text"] = "Folder data"
+        # self.data_path["fg"]   = "black"
+        # # self.data_path["command"] = tkFileDialog.askopenfilename(initialdir = "/",title = "Select file",filetypes = (("jpeg files","*.jpg"),("all files","*.*")))
+        # # self.data_path["command"] = tkFileDialog.askdirectory()
+        # # self.data_path.pack({"side": "left"})
+        # self.data_path.grid(row=0, column=0)
+        ###################################################################
+        ## new 
+        self.folder_path_input = tk.StringVar()
+        self.label_folder1 = tk.Label(self,textvariable=self.folder_path_input)
+        self.label_folder1.grid(row=1, column=0)
+        self.button_data_path = tk.Button(self,text="Folder data", command=self.browse_button_input)
+        self.button_data_path.grid(row=0, column=0)
 
-        # ################################################################### all button list
-        # ## select format files
-        # self.lab_format_files = tk.Label(self,text="Format file/s")
-        # self.lab_format_files.grid(row=1, column=1)
-        # self.format_file = tk.Listbox(self)
-        # for item in ["gpickle", "npy", "txt","csv","txt (lower dist-matrix)","txt (upper dist-matrix)"]:
-        #     self.format_file.insert(tk.END, item)
-        # # self.format_file["command"] =  self.askopenfilename()
-        # self.format_file.grid(row=2, column=1)
         ###################################################################
         ## select format files
         self.lab_format_files = tk.Label(self,text="Format input file/s")
         self.lab_format_files.grid(row=1, column=1,sticky=tk.W)
-        self.var = tk.StringVar(None,"txt")
-        self.format1 = tk.Radiobutton(self, text="txt", variable=self.var, value='txt')
+        self.var_format = tk.StringVar(None,"txt")
+        self.format1 = tk.Radiobutton(self, text="txt", variable=self.var_format, value='txt')
         self.format1.grid(row=2, column=1,sticky=tk.W)
-        self.format2 = tk.Radiobutton(self, text="csv", variable=self.var, value='csv')
+        self.format2 = tk.Radiobutton(self, text="csv", variable=self.var_format, value='csv')
         self.format2.grid(row=3, column=1,sticky=tk.W)
-        self.format3 = tk.Radiobutton(self, text="npy", variable=self.var, value='npy')
+        self.format3 = tk.Radiobutton(self, text="npy", variable=self.var_format, value='npy')
         self.format3.grid(row=4, column=1,sticky=tk.W)
-        self.format4 = tk.Radiobutton(self, text="gpickle", variable=self.var, value='gpickle')
+        self.format4 = tk.Radiobutton(self, text="gpickle", variable=self.var_format, value='gpickle')
         self.format4.grid(row=5, column=1,sticky=tk.W)
-        self.format5 = tk.Radiobutton(self, text="txt (lower dist-matrix)", variable=self.var, value='txt-lowdist')
+        self.format5 = tk.Radiobutton(self, text="txt (lower dist-matrix)", variable=self.var_format, value='txt-lowdist')
         self.format5.grid(row=6, column=1,sticky=tk.W)
-        self.format6 = tk.Radiobutton(self, text="txt (upper dist-matrix)", variable=self.var, value='txt-updist')
+        self.format6 = tk.Radiobutton(self, text="txt (upper dist-matrix)", variable=self.var_format, value='txt-updist')
         self.format6.grid(row=7, column=1,sticky=tk.W)
         ##################################################################
         ## Execute programm button ##
@@ -72,21 +111,35 @@ class Application(tk.Frame):
     def createWidgets_optional(self):
         ## label results 
         self.lab_results = tk.Label(self,text="Results")
-        self.lab_results.grid(row=1, column=2)
+        self.lab_results.grid(row=3, column=2)
         ## ------------- OPTIONAL ----------------------------------
         ## select specific file to analyse
         self.data_file = tk.Button(self)
         self.data_file["text"] = "File to analyse"
         self.data_file["fg"]   = "black"
+        # self.data_file["command"]=self.askopenfilename()
+        # self.data_file = tk.askopenfilename(initialdir = "C:/<whatever>")
         # self.data_file["command"] =  self.askopenfilename()
         self.data_file.grid(row=0, column=1)
         ## ----------------------------------------------------------
         ## output data path
-        self.output_folder = tk.Button(self)
-        self.output_folder["text"] = "Output folder"
-        self.output_folder["fg"]   = "black"
-        # self.output_folder["command"] =  self.askopenfilename()
-        self.output_folder.grid(row=0, column=2)
+        # ################################################################### old 
+        # self.output_folder = tk.Button(self)
+        # self.output_folder["text"] = "Output folder"
+        # self.output_folder["fg"]   = "black"
+        # # self.output_folder["command"] =  self.askopenfilename()
+        # self.output_folder.grid(row=0, column=2)
+
+        ###################################################################
+        # new 
+        self.folder_path_output = tk.StringVar()
+        self.label_folder2 = tk.Label(self,textvariable=self.folder_path_output)
+        self.label_folder2.grid(row=1, column=2)
+        self.button_output_path = tk.Button(self,text="out data", command=self.browse_button_output)
+        self.button_output_path.grid(row=0, column=2)
+
+
+
         ## ----------------------------------------------------------
         ## generate plots
         self.plots_on = tk.BooleanVar()
@@ -101,54 +154,36 @@ class Application(tk.Frame):
         self.plots_norm = tk.BooleanVar()
         self.plots_norm.set(False)
         self.plots_n = tk.Checkbutton(self,text ='Normalized plots',variable = self.plots_norm)
-        self.plots_n.grid(row=3, column=2,sticky=tk.W)
+        self.plots_n.grid(row=4, column=2,sticky=tk.W)
         # self.plots
         # \todo ficar per defecte True
         # self.plots["command"] =  self.askopenfilename()
-
-
-        ## ----------------------------------------------------------
-        ################################################################### all button list
-        # ## max dimension to compute persistent homology
-        # self.lab_dim_max = tk.Label(self,text="Max dimension to compute\n persistent homology")
-        # self.lab_dim_max.grid(row=1, column=0)
-        # # \TODO change listboxes to radiobuttons: http://www.tkdocs.com/tutorial/widgets.html
-        # self.list_dim_max = tk.Listbox(self)
-        # self.list_dim_max.grid(row=2, column=0)
-        # for item in ["0", "1", "2"]:
-        #     self.list_dim_max.insert(tk.END, item)
         ###################################################################
         # max dimension to compute persistent homology
         self.lab_dim_max = tk.Label(self,text="Max dimension to compute\n persistent homology")
-        self.lab_dim_max.grid(row=1, column=0)
+        self.lab_dim_max.grid(row=2, column=0)
         self.var_dim = tk.IntVar(None,1)
         self.dim_max0 = tk.Radiobutton(self, text="0", variable=self.var_dim, value=0)
-        self.dim_max0.grid(row=2, column=0)
+        self.dim_max0.grid(row=3, column=0)
         self.dim_max1 = tk.Radiobutton(self, text="1", variable=self.var_dim, value=1)
-        self.dim_max1.grid(row=3, column=0)
+        self.dim_max1.grid(row=4, column=0)
         self.dim_max2 = tk.Radiobutton(self, text="2", variable=self.var_dim, value=2)
-        self.dim_max2.grid(row=4, column=0)
+        self.dim_max2.grid(row=5, column=0)
         ##################################################################
-
 
     def launch_computation(self):
         print 'launching...'
-
-        # get maximum dimension
-        #index = self.list_dim_max.curselection()
-        #dim_max = self.list_dim_max.get(index)
-        dim_max = 0
-        # get format file
-        index = self.format_file.curselection()
-        format_file = self.format_file.get(index)
-
+        # \TODO fer funcio q converteixi les variables
         main_test(a=4,b=[1,4],
             plots_norm=self.plots_norm.get(),
             plots=self.plots_on.get(),
-            max_dim=dim_max,
-            format_file=format_file
+            max_dim=self.var_dim.get(),
+            format_file=self.var_format.get(),
+            data_path=self.folder_path_input.get(),
+            output_path = self.folder_path_output.get()
             )
 
+# (data_path,format_type,file_name=None,lower_matrix = False, upper_matrix = False, output_path=None,plots_on=True,normalized=False,max_dim=1):
 
 
 root = tk.Tk()
