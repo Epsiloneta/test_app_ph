@@ -1,0 +1,5 @@
+Ensure that the program finishes when the window closes? is it due to os.system? a non closed file?
+Ensure that everything works as expected on Windows too
+Restructure folder to follow a python package -> https://python-packaging.readthedocs.io/en/latest/
+Add the Ripser C++ library as an C++ extension and compile it within the package -> https://docs.python.org/2.7/extending/building.html
+Publish it to pipy
