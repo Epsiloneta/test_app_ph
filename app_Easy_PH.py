@@ -2,7 +2,7 @@ import Tkinter as tk
 import tkFileDialog
 # from tkFileDialog import askopenfilename
 
-from function_main import main_test
+from function_main import main_test, check_and_prepare_variables, main_function
 
 # from Tkinter import Tk
 # from tkFileDialog import askopenfilename
@@ -92,7 +92,7 @@ class Application(tk.Frame):
         ###################################################################
         ## select format files
         self.lab_format_files = tk.Label(self,text="Format input file/s",
-            fg = "blue",bg = "white",font = "Verdana 12 bold") 
+            font = "Verdana 12 bold") #  fg = "blue",bg = "white",
         self.lab_format_files.grid(row=2, column=1,sticky=tk.W)
         self.var_format = tk.StringVar(None,"txt")
         self.format1 = tk.Radiobutton(self, text="txt", variable=self.var_format, value='txt')
@@ -110,7 +110,7 @@ class Application(tk.Frame):
         ##################################################################
         ## Execute programm button ##
         self.execute_button = tk.Button(self,command=self.launch_computation)
-        self.execute_button["text"] = "Run programm"
+        self.execute_button["text"] = "Run program"
         self.execute_button["fg"]   = "blue"
         # self.data_path.pack({"side": "left"})
         self.execute_button.grid(row=0, column=3)
@@ -119,7 +119,7 @@ class Application(tk.Frame):
     def createWidgets_optional(self):
         ## label results 
         self.lab_results = tk.Label(self,text="Results",
-            fg = "blue",bg = "white",font = "Verdana 10") 
+            font = "Verdana 10 bold") # fg = "blue",bg = "white",
         self.lab_results.grid(row=2, column=2)
         ## ------------- OPTIONAL ----------------------------------
         ## select specific file to analyse
@@ -180,7 +180,7 @@ class Application(tk.Frame):
         ###################################################################
         # max dimension to compute persistent homology
         self.lab_dim_max = tk.Label(self,text="Max dimension to compute\n persistent homology",
-            fg = "blue",bg = "white",font = "Verdana 10 bold")
+            font = "Verdana 10 bold") # fg = "blue",bg = "white",
         self.lab_dim_max.grid(row=2, column=0)
         self.var_dim = tk.IntVar(None,1)
         self.dim_max0 = tk.Radiobutton(self, text="0", variable=self.var_dim, value=0)
@@ -190,21 +190,49 @@ class Application(tk.Frame):
         self.dim_max2 = tk.Radiobutton(self, text="2", variable=self.var_dim, value=2)
         self.dim_max2.grid(row=5, column=0)
         ##################################################################
+    
+    
 
     def launch_computation(self):
         print 'launching...'
-        # \TODO fer funcio q converteixi les variables
-        main_test(a=4,b=[1,4],
-            plots_norm=self.plots_norm.get(),
-            plots=self.plots_on.get(),
-            max_dim=self.var_dim.get(),
-            format_file=self.var_format.get(),
-            data_path=self.folder_path_input.get(),
-            output_path = self.folder_path_output.get(),
-            file_name = self.file_path_input.get()
-            )
 
-# (data_path,format_type,file_name=None,lower_matrix = False, upper_matrix = False, output_path=None,plots_on=True,normalized=False,max_dim=1):
+        data_path=self.folder_path_input.get()
+        format_type,lower_matrix,upper_matrix,file_name,output_path,file_name = check_and_prepare_variables(
+            self.folder_path_input.get(),self.var_format.get(),
+            self.file_path_input.get(),
+            self.folder_path_output.get())
+
+        plots_on=self.plots_on.get()
+        normalized=self.plots_norm.get()
+        max_dim=self.var_dim.get()
+
+        print 'Your input variables are the following:'
+        main_test(data_path=self.folder_path_input.get(),
+            format_type=format_type,
+            file_name = file_name,
+            lower_matrix = lower_matrix,
+            upper_matrix = upper_matrix,
+            output_path = output_path,
+            plots_on=self.plots_on.get(),
+            normalized=self.plots_norm.get(),
+            max_dim=self.var_dim.get())
+
+        print 'launching Easy PH... '
+
+        main_function(data_path,format_type,file_name=file_name,lower_matrix = lower_matrix, upper_matrix = upper_matrix, 
+            output_path=output_path,plots_on=plots_on,normalized=normalized,max_dim=max_dim)
+
+        if(output_path==None):
+            print 'Go to check your results at %s/results!'%self.folder_path_input.get()
+        else:
+            print 'Go to check your results at %s/results!'%output_path
+        return()
+
+
+
+# main_function(data_path,format_type,file_name=None,lower_matrix = False, upper_matrix = False, output_path=None,plots_on=True,normalized=False,max_dim=1):
+    
+# \todo error fer q surti pantalleta 
 
 
 root = tk.Tk()
