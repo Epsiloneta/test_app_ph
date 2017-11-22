@@ -21,28 +21,46 @@ class Application(tk.Frame):
         self.master.title("Easy Persistent Homology")
         # self.pack(fill=tk.BOTH, expand=1)
         # self.pack()
-        self.grid(row=0,column=0,columnspan=4,rowspan=6)
+        self.grid(row=0,column=0,columnspan=4,rowspan=8)
         self.createWidgets()
         self.createWidgets_optional()
 
     def createWidgets(self):
         
         self.data_path = tk.Button(self)
-        self.data_path["text"] = "Folder data or Folder to analyse data"
+        self.data_path["text"] = "Folder data"
         self.data_path["fg"]   = "black"
         # self.data_path["command"] =  self.askopenfilename()
         # self.data_path.pack({"side": "left"})
         self.data_path.grid(row=0, column=0)
 
+        # ################################################################### all button list
+        # ## select format files
+        # self.lab_format_files = tk.Label(self,text="Format file/s")
+        # self.lab_format_files.grid(row=1, column=1)
+        # self.format_file = tk.Listbox(self)
+        # for item in ["gpickle", "npy", "txt","csv","txt (lower dist-matrix)","txt (upper dist-matrix)"]:
+        #     self.format_file.insert(tk.END, item)
+        # # self.format_file["command"] =  self.askopenfilename()
+        # self.format_file.grid(row=2, column=1)
+        ###################################################################
         ## select format files
-        self.lab_format_files = tk.Label(self,text="Format file/s")
-        self.lab_format_files.grid(row=1, column=1)
-        self.format_file = tk.Listbox(self)
-        for item in ["gpickle", "npy", "txt","csv","txt (lower dist-matrix)","txt (upper dist-matrix)"]:
-            self.format_file.insert(tk.END, item)
-        # self.format_file["command"] =  self.askopenfilename()
-        self.format_file.grid(row=2, column=1)
-
+        self.lab_format_files = tk.Label(self,text="Format input file/s")
+        self.lab_format_files.grid(row=1, column=1,sticky=tk.W)
+        self.var = tk.StringVar(None,"txt")
+        self.format1 = tk.Radiobutton(self, text="txt", variable=self.var, value='txt')
+        self.format1.grid(row=2, column=1,sticky=tk.W)
+        self.format2 = tk.Radiobutton(self, text="csv", variable=self.var, value='csv')
+        self.format2.grid(row=3, column=1,sticky=tk.W)
+        self.format3 = tk.Radiobutton(self, text="npy", variable=self.var, value='npy')
+        self.format3.grid(row=4, column=1,sticky=tk.W)
+        self.format4 = tk.Radiobutton(self, text="gpickle", variable=self.var, value='gpickle')
+        self.format4.grid(row=5, column=1,sticky=tk.W)
+        self.format5 = tk.Radiobutton(self, text="txt (lower dist-matrix)", variable=self.var, value='txt-lowdist')
+        self.format5.grid(row=6, column=1,sticky=tk.W)
+        self.format6 = tk.Radiobutton(self, text="txt (upper dist-matrix)", variable=self.var, value='txt-updist')
+        self.format6.grid(row=7, column=1,sticky=tk.W)
+        ##################################################################
         ## Execute programm button ##
         self.execute_button = tk.Button(self,command=self.launch_computation)
         self.execute_button["text"] = "Run programm"
@@ -74,7 +92,7 @@ class Application(tk.Frame):
         self.plots_on = tk.BooleanVar()
         self.plots_on.set(True)
         self.plots = tk.Checkbutton(self,text ='Generate Plots',variable = self.plots_on)
-        self.plots.grid(row=2, column=2)
+        self.plots.grid(row=2, column=2,sticky=tk.W)
         # self.plots
         # \todo ficar per defecte True
         # self.plots["command"] =  self.askopenfilename()
@@ -83,22 +101,35 @@ class Application(tk.Frame):
         self.plots_norm = tk.BooleanVar()
         self.plots_norm.set(False)
         self.plots_n = tk.Checkbutton(self,text ='Normalized plots',variable = self.plots_norm)
-        self.plots_n.grid(row=3, column=2)
+        self.plots_n.grid(row=3, column=2,sticky=tk.W)
         # self.plots
         # \todo ficar per defecte True
         # self.plots["command"] =  self.askopenfilename()
 
 
         ## ----------------------------------------------------------
-        ## max dimension to compute persistent homology
+        ################################################################### all button list
+        # ## max dimension to compute persistent homology
+        # self.lab_dim_max = tk.Label(self,text="Max dimension to compute\n persistent homology")
+        # self.lab_dim_max.grid(row=1, column=0)
+        # # \TODO change listboxes to radiobuttons: http://www.tkdocs.com/tutorial/widgets.html
+        # self.list_dim_max = tk.Listbox(self)
+        # self.list_dim_max.grid(row=2, column=0)
+        # for item in ["0", "1", "2"]:
+        #     self.list_dim_max.insert(tk.END, item)
+        ###################################################################
+        # max dimension to compute persistent homology
         self.lab_dim_max = tk.Label(self,text="Max dimension to compute\n persistent homology")
         self.lab_dim_max.grid(row=1, column=0)
-        # \TODO change listboxes to radiobuttons: http://www.tkdocs.com/tutorial/widgets.html
-        self.list_dim_max = tk.Listbox(self)
-        self.list_dim_max.grid(row=2, column=0)
-        for item in ["0", "1", "2"]:
-            self.list_dim_max.insert(tk.END, item)
-        # \todo get active dim 1
+        self.var_dim = tk.IntVar(None,1)
+        self.dim_max0 = tk.Radiobutton(self, text="0", variable=self.var_dim, value=0)
+        self.dim_max0.grid(row=2, column=0)
+        self.dim_max1 = tk.Radiobutton(self, text="1", variable=self.var_dim, value=1)
+        self.dim_max1.grid(row=3, column=0)
+        self.dim_max2 = tk.Radiobutton(self, text="2", variable=self.var_dim, value=2)
+        self.dim_max2.grid(row=4, column=0)
+        ##################################################################
+
 
     def launch_computation(self):
         print 'launching...'
