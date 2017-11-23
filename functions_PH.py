@@ -7,8 +7,6 @@ import numpy as np
 import pandas as pd
 import scipy.io
 import timeit
-import seaborn as sns
-sns.set(style="darkgrid")
 
 def _to_lower_matrix(data_path,M,shape_M):
     """

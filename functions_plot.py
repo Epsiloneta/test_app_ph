@@ -3,6 +3,8 @@
 import pickle as pk
 import networkx as nx
 import numpy as np
+import matplotlib
+matplotlib.use('agg')
 import pylab as plt
 import pandas as pd
 import seaborn as sns

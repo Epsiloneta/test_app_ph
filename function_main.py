@@ -3,11 +3,9 @@ import os
 import pickle as pk
 import networkx as nx
 import numpy as np
-import pylab as plt
 import pandas as pd
 import scipy.io
 import timeit
-import seaborn as sns
 
 ## file with PH functions
 from functions_PH import *
