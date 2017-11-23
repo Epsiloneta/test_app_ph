@@ -89,7 +89,7 @@ class Application(tk.Frame):
         ###################################################################
         ## select folder data
         ## info button 
-        self.info_input = tk.Button(text ="info", relief=tk.RAISED,\
+        self.info_input = tk.Button(self,text ="info", relief=tk.RAISED,\
                          bitmap="info",command=self.info_inputs)
         self.info_input.grid(row=0,column = 0,sticky=tk.N)
         self.folder_path_input = tk.StringVar()
@@ -105,9 +105,9 @@ class Application(tk.Frame):
         self.lab_format_files.grid(row=2, column=3)#,sticky=tk.W)
         self.var_format = tk.StringVar(None,"txt")
         ## info button 
-        self.info_format = tk.Button(text ="info", relief=tk.RAISED,\
+        self.info_format = tk.Button(self,text ="info", relief=tk.RAISED,\
                          bitmap="info",command=self.info_formats)
-        self.info_format.grid(row=1,column = 4,sticky=tk.W)
+        self.info_format.grid(row=2,column = 4,sticky=tk.W)
         self.format1 = tk.Radiobutton(self, text="txt", variable=self.var_format, value='txt')
         self.format1.grid(row=3, column=3,sticky=tk.W)
         self.format2 = tk.Radiobutton(self, text="csv", variable=self.var_format, value='csv')
@@ -134,9 +134,9 @@ class Application(tk.Frame):
             font = "Verdana 12 bold") # fg = "blue",bg = "white",
         self.lab_results.grid(row=2, column=5)
         ## info button 
-        self.info_results1 = tk.Button(text ="info", relief=tk.RAISED,\
+        self.info_results1 = tk.Button(self,text ="info", relief=tk.RAISED,\
                          bitmap="info",command=self.info_results)
-        self.info_results1.grid(row=2,column = 6,sticky=tk.W+tk.N)
+        self.info_results1.grid(row=2,column = 6,sticky=tk.W)
         ## ------------- OPTIONAL ----------------------------------
         ## select specific file to analyse
         # # self.data_file = tk.askopenfilename(initialdir = "C:/<whatever>")
@@ -153,7 +153,7 @@ class Application(tk.Frame):
         self.folder_path_output = tk.StringVar()
         self.label_folder2 = tk.Label(self,textvariable=self.folder_path_output)
         self.label_folder2.grid(row=1, column=5)
-        self.button_output_path = tk.Button(self,text="Output folder", command=self.browse_button_output)
+        self.button_output_path = tk.Button(self,text="Output folder", command=self.browse_button_output,width=10)
         self.button_output_path.grid(row=0, column=5)
 
         ## ----------------------------------------------------------
