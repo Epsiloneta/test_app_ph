@@ -45,12 +45,7 @@ def check_and_prepare_variables(data_path,format_type,file_name,output_path):
         aux = file_name.split('.')[-1]
         if(aux!=format_type):
             raise Exception('Format input file does not correspond to File to analyse extension!')
-        # ### \TODO windows!!!
-        # if(os.name == 'nt'):
-        #     file_name.split('/')
-        #     print 'Im on windows'
-        # elif(os.name == 'posix'):
-        file_name = file_name.split('/')[-1]
+        file_name = os.path.basename(file_name)
 
     if(output_path == ''):
         output_path = None
@@ -75,7 +70,7 @@ def main_function(data_path,format_type,file_name=None,lower_matrix = False, upp
     """
     ## create folder with results
     if(output_path == None): output_path = data_path
-    output_path = '%s/results'%output_path
+    output_path = os.path.join(output_path,'results')
     if not os.path.exists(output_path):
         os.makedirs(output_path)
 
@@ -104,7 +99,7 @@ def main_function(data_path,format_type,file_name=None,lower_matrix = False, upp
         ## Plots ## 
         if(plots_on):
             ## check or create folder for plots
-            plots_folder = '%s/plots'%output_path
+            plots_folder = os.path.join(output_path,'plots')
             if not os.path.exists(plots_folder):
                 os.makedirs(plots_folder)
             if(normalized):
@@ -133,7 +128,7 @@ def main_function(data_path,format_type,file_name=None,lower_matrix = False, upp
         ## Plots ## 
         if(plots_on):
             ## check or create folder for plots
-            plots_folder = '%s/plots'%output_path
+            plots_folder = os.path.join(output_path,'plots')
             if not os.path.exists(plots_folder):
                 os.makedirs(plots_folder)
         for file_name in list_files:
