@@ -15,8 +15,9 @@ def _to_lower_matrix(data_path,M,shape_M):
     from a full matrix create a lower matrix (without diagonal) and save it to a .txt file
     """
     ## lower matrix file
-    print 'data path ', '%s/input.txt'%data_path
-    file_input = open('%s/input.txt'%data_path,'wb')
+    file_input_path = os.path.join(data_path,'input.txt')
+    print 'data path ', file_input_path
+    file_input = open(file_input_path,'wb')
     for i in range(1,shape_M):
         for j in range(0,i):
             file_input.write(str(M[i,j])+',')
@@ -32,9 +33,10 @@ def check_format_input(data_path,file_name,lower_matrix,upper_matrix,format_type
     format_type = 'gpickle', 'npy', 'csv', 'txt'
     return_M = False (we do not return input data), True (we return input data)
     """
+    file_full_path = os.path.join(data_path,file_name)
     if(upper_matrix or lower_matrix):
         max_val = 0; shape_M = 1
-        with open(data_path+'/'+file_name,'r') as f:
+        with open(file_full_path,'r') as f:
             for lin in f:
                 shape_M = shape_M +1
                 lin = lin.strip().split(',')
@@ -45,14 +47,14 @@ def check_format_input(data_path,file_name,lower_matrix,upper_matrix,format_type
                     max_val = aux
     else: ## create lower matrix
         if(format_type == 'gpickle'):
-            G = nx.read_gpickle(data_path+'/'+file_name)
+            G = nx.read_gpickle(file_full_path)
             M = nx.adj_matrix(G).todense()
         if(format_type == 'npy'):
-            M = np.load(data_path+'/'+file_name)
+            M = np.load(file_full_path)
         if(format_type == 'csv' or format_type == 'txt'):
             # np.savetxt('a.txt',a,delimiter=',',newline='\n')
             # np.savetxt("a.csv", a, delimiter=",")
-            M = np.loadtxt(data_path+'/'+file_name,delimiter=',')
+            M = np.loadtxt(file_full_path,delimiter=',')
         shape_M = M.shape[0]
         if(shape_M != M.shape[1]):
             raise Exception('Data input is not a square matrix!!!')
@@ -85,8 +87,9 @@ def exec_ripser(data_path,ripser_path,output_path,max_dim,input_file='input.txt'
     stop = timeit.default_timer()
     print 'Ripser execution time '
     print stop - start 
-    if(os.path.isfile('%s/input.txt'%data_path)):
-        os.remove('%s/input.txt'%data_path)  ## remove auxiliar file with lower matrix used as input for Ripser
+    input_file_path = os.path.join(data_path,'input.txt')
+    if(os.path.isfile(input_file_path)):
+        os.remove(input_file_path)  ## remove auxiliar file with lower matrix used as input for Ripser
     return()
 
 
@@ -130,7 +133,8 @@ def read_ripser_output(output_path,max_dim,output_name=None):
     max_dim: max homology dimension computed
     """
     # \todo add persistence by density (columns pers by threshold and column pers by dens) ## only needed if input weighted network
-    data = open('%s/output_ripser.txt'%output_path,'rb').readlines()
+    output_file_path =os.path.join(output_path,'output_ripser.txt')
+    data = open(output_file_path,'rb').readlines()
     value_range = eval(data[1].rstrip().split(' ')[-1])
     holes = dict() ## save holes by dimension (birth, death, persistence)
     for dimH in range(0,max_dim+1):#[0,1,2]:
@@ -145,11 +149,13 @@ def read_ripser_output(output_path,max_dim,output_name=None):
         holes[dimH] = d 
     data_pds = pd.concat(holes.values())
     if(output_name!=None):
-        data_pds.to_csv('%s/%s_PDS.csv'%(output_path,output_name)) ## save pandas file with PDs for dim 0,1,2
-        print 'Saved results in %s/%s_PDS.csv'%(output_path,output_name)
+        output_file_path = os.path.join(output_path,'%s_PDS.csv'%output_name)
+        data_pds.to_csv(output_file_path) ## save pandas file with PDs for dim 0,1,2
+        print 'Saved results in %s'%(output_file_path)
     else:
-        data_pds.to_csv('%s/outputs_PDS.csv'%output_path) ## save pandas file with PDs for dim 0,1,2
-        print 'Saved results in %s/outputs_PDS.csv'%output_path
+        output_file_path = os.path.join(output_path,'outputs_PDS.csv')
+        data_pds.to_csv(output_file_path) ## save pandas file with PDs for dim 0,1,2
+        print 'Saved results in %s'%output_file_path
     return()
 
 def summary_output(output_path,M_shape,M_max,max_dim,output_name=None):
@@ -160,12 +166,16 @@ def summary_output(output_path,M_shape,M_max,max_dim,output_name=None):
     max_dim: max homology dimension computed
     """
     if(output_name!=None):
-        data = pd.read_csv(output_path+'/%s_PDS.csv'%output_name,index_col = 0) ## index_col to avoid generate a new indexed column
-        summary_file = open(output_path+'/%s_summary.txt'%output_name,'wb')
+        os.path.join(output_path,'%s_PDS.csv'%output_name)
+        data = pd.read_csv(os.path.join(output_path,'%s_PDS.csv'%output_name),
+            index_col = 0) ## index_col to avoid generate a new indexed column
+        summary_file = open(os.path.join(output_path,'%s_summary.csv'%output_name),'wb')
     else:
-        data = pd.read_csv(output_path+'/outputs_PDS.csv',index_col = 0) ## index_col to avoid generate a new indexed column
-        summary_file = open(output_path+'/summary.txt','wb')
-    data_ripser = open('%s/output_ripser.txt'%output_path,'rb').readlines()
+        data = pd.read_csv(os.path.join(output_path,'outputs_PDS.csv'),
+            index_col = 0) ## index_col to avoid generate a new indexed column
+        summary_file = open(os.path.join(output_path,'summary.csv'),'wb')
+    output_ripser_file = os.path.join(output_path,'output_ripser.txt')
+    data_ripser = open(output_ripser_file,'rb').readlines()
     value_range = eval(data_ripser[1].rstrip().split(' ')[-1])
     summary_file.write('Number of nodes/points:%i\n'%M_shape)
     summary_file.write('value range:[%f,%f]\n'%(value_range[0],value_range[1]))
@@ -184,8 +194,8 @@ def summary_output(output_path,M_shape,M_max,max_dim,output_name=None):
         summary_file.write('---------------------------------------------------\n')
     summary_file.close()
     if(output_name!=None):
-        print 'Summary file saved in %s/%s_summary.txt'%(output_path,output_name)
+        print 'Summary file saved in %s'%os.path.join(output_path,'%s_summary.csv'%output_name)
     else:
-        print 'Summary file saved in %s/summary.txt'%output_path
-    os.remove('%s/output_ripser.txt'%output_path) ## remove file generated by Ripser
+        print 'Summary file saved in %s'%os.path.join(output_path,'summary.csv')
+    os.remove(output_ripser_file) ## remove file generated by Ripser
     return()
