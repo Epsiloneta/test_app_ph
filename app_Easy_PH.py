@@ -82,6 +82,7 @@ class Application(tk.Frame):
         # Allow user to select a directory and store it in global var
         filename = tkFileDialog.askopenfilename()
         # filename = tkFileDialog.askopenfilename(initialdir = self.folder_path_input+"/",title = "Select file",filetypes = (("jpeg files","*.jpg"),("all files","*.*")))
+        filename = filename.split('/')[-1]
         self.file_path_input.set(filename)
         print(filename)
 
@@ -91,23 +92,23 @@ class Application(tk.Frame):
         ## info button 
         self.info_input = tk.Button(self,text ="info", relief=tk.RAISED,\
                          bitmap="info",command=self.info_inputs)
-        self.info_input.grid(row=0,column = 0,sticky=tk.N)
+        self.info_input.grid(row=0,column = 0,sticky=tk.W)
         self.folder_path_input = tk.StringVar()
-        self.label_folder1 = tk.Label(self,textvariable=self.folder_path_input)
+        self.label_folder1 = tk.Label(self,textvariable=self.folder_path_input,width=40,height=2)
         self.label_folder1.grid(row=1, column=1)
-        self.button_data_path = tk.Button(self,text="Folder data", command=self.browse_button_input)
-        self.button_data_path.grid(row=0, column=1)
+        self.button_data_path = tk.Button(self,text="Folder data", command=self.browse_button_input,font='Verdana 12 bold')
+        self.button_data_path.grid(row=0, column=1,sticky=tk.W+tk.E)
 
         ###################################################################
         ## select format files
         self.lab_format_files = tk.Label(self,text="Format input file/s",
             font = "Verdana 12 bold") #  fg = "blue",bg = "white",
-        self.lab_format_files.grid(row=2, column=3)#,sticky=tk.W)
+        self.lab_format_files.grid(row=2, column=3,sticky=tk.W)
         self.var_format = tk.StringVar(None,"txt")
         ## info button 
         self.info_format = tk.Button(self,text ="info", relief=tk.RAISED,\
                          bitmap="info",command=self.info_formats)
-        self.info_format.grid(row=2,column = 4,sticky=tk.W)
+        self.info_format.grid(row=2,column = 2,sticky=tk.W)
         self.format1 = tk.Radiobutton(self, text="txt", variable=self.var_format, value='txt')
         self.format1.grid(row=3, column=3,sticky=tk.W)
         self.format2 = tk.Radiobutton(self, text="csv", variable=self.var_format, value='csv')
@@ -122,26 +123,26 @@ class Application(tk.Frame):
         self.format6.grid(row=8, column=3,sticky=tk.W)
         ##################################################################
         ## Execute programm button ##
-        self.execute_button = tk.Button(self,command=self.launch_computation)
+        self.execute_button = tk.Button(self,command=self.launch_computation,font='Verdana 12 bold')
         self.execute_button["text"] = "Run program"
         self.execute_button["fg"]   = "blue"
-        self.execute_button.grid(row=0, column=7)
+        self.execute_button.grid(row=0, column=6)
         ## ----------------------------------------------------------
 
     def createWidgets_optional(self):
         ## label results 
         self.lab_results = tk.Label(self,text="Results",
             font = "Verdana 12 bold") # fg = "blue",bg = "white",
-        self.lab_results.grid(row=2, column=5)
+        self.lab_results.grid(row=2, column=5,sticky=tk.W)
         ## info button 
         self.info_results1 = tk.Button(self,text ="info", relief=tk.RAISED,\
                          bitmap="info",command=self.info_results)
-        self.info_results1.grid(row=2,column = 6,sticky=tk.W)
+        self.info_results1.grid(row=2,column = 4,sticky=tk.W)
         ## ------------- OPTIONAL ----------------------------------
         ## select specific file to analyse
         # # self.data_file = tk.askopenfilename(initialdir = "C:/<whatever>")
         self.file_path_input = tk.StringVar()
-        self.label_folder3 = tk.Label(self,textvariable=self.file_path_input)
+        self.label_folder3 = tk.Label(self,textvariable=self.file_path_input,width=30,height=2)
         self.label_folder3.grid(row=1, column=3)
         self.button_file_path = tk.Button(self,text="File to analyse", command=self.browse_button_file)
         self.button_file_path.grid(row=0, column=3)
@@ -151,10 +152,10 @@ class Application(tk.Frame):
         # \todo add output folder as optional and data folder as default
         # \todo add input folder starting path from: on sigui
         self.folder_path_output = tk.StringVar()
-        self.label_folder2 = tk.Label(self,textvariable=self.folder_path_output)
+        self.label_folder2 = tk.Label(self,textvariable=self.folder_path_output,width=40,height=2)
         self.label_folder2.grid(row=1, column=5)
-        self.button_output_path = tk.Button(self,text="Output folder", command=self.browse_button_output,width=10)
-        self.button_output_path.grid(row=0, column=5)
+        self.button_output_path = tk.Button(self,text="Output folder", command=self.browse_button_output)
+        self.button_output_path.grid(row=0, column=5,sticky=tk.W)
 
         ## ----------------------------------------------------------
         ## generate plots
@@ -171,19 +172,19 @@ class Application(tk.Frame):
         ###################################################################
         # max dimension to compute persistent homology
         ## info button 
-        # self.info_dimension = tk.Button(text ="info", relief=tk.RAISED,\
-        #                  bitmap="info",command=info_dimension)
-        # self.info_dimension.grid(row=2,column = 0,sticky=tk.W+tk.N+tk.E)
+        self.info_dim = tk.Button(self,text ="info", relief=tk.RAISED,\
+                         bitmap="info",command=self.info_maxdimension)
+        self.info_dim.grid(row=2,column = 0,sticky=tk.W)
         self.lab_dim_max = tk.Label(self,text="Max dimension to compute\n persistent homology",
-            font = "Verdana 10 bold") # fg = "blue",bg = "white",
-        self.lab_dim_max.grid(row=2, column=1)
+            font = "Verdana 12 bold") # fg = "blue",bg = "white",
+        self.lab_dim_max.grid(row=2, column=1,sticky=tk.W)
         self.var_dim = tk.IntVar(None,1)
         self.dim_max0 = tk.Radiobutton(self, text="0", variable=self.var_dim, value=0)
-        self.dim_max0.grid(row=3, column=1)
+        self.dim_max0.grid(row=3, column=1,sticky=tk.W)
         self.dim_max1 = tk.Radiobutton(self, text="1", variable=self.var_dim, value=1)
-        self.dim_max1.grid(row=4, column=1)
+        self.dim_max1.grid(row=4, column=1,sticky=tk.W)
         self.dim_max2 = tk.Radiobutton(self, text="2", variable=self.var_dim, value=2)
-        self.dim_max2.grid(row=5, column=1)
+        self.dim_max2.grid(row=5, column=1,sticky=tk.W)
         ##################################################################
     
 
@@ -208,6 +209,47 @@ class Application(tk.Frame):
         t.HighlightPattern("Output folder", "blue")
         t.HighlightPattern("optional", "blue")
         t.HighlightPattern("compulsory", "blue")
+        tk.Button(win, text='OK', command=win.destroy).pack()
+
+
+    def info_maxdimension(self):
+        win = tk.Toplevel()
+        win.title("About Maximum dimension to compute Persistent Homology")
+        about = '''
+              Homology counts the n-dimensional holes in a given space. The number of holes (how many) given a dimension is called: betti numbers. 
+              Persistent Homology (PH) counts the evolution of n-dimensional holes in a given space.
+              'n' refers to the dimension of the hole:
+
+              0-dimensional holes: represent connected components
+              1-dimensional holes: represent cycles
+              2-dimensional holes: represent voids
+              n-dimensional holes: represent cavities of n-dimension
+
+              For example a torus has:
+
+              number of 0-dimensional holes: 1
+              number of 1-dimensional holes: 2
+              number of 2-dimensional holes: 1
+              number of n-dimensional holes with n>2: 0 (for all n>2)
+
+              Options to choose (with interpretability):
+
+              dim 0, dim 1 (default) and dim 2.
+
+              If you choose dimension 0, holes will be computed only for dimension 0. 
+              If you choose dimension 1, holes will be computed for dimension 0 and 1. 
+              If you choose dimension 2, holes will be computed for dimension 0,1 and until 2. 
+            '''
+        # about = re.sub("\n\s*", "\n", about) # remove leading whitespace from each line
+        t=CustomText(win, wrap="word", width=100, height=25, borderwidth=0)
+        t.tag_configure("blue", foreground="blue")
+        t.pack(sid="top",fill="both",expand=True)
+        t.insert("1.0", about)
+        t.HighlightPattern("Homology", "blue")
+        t.HighlightPattern("Persistent Homology", "blue")
+        t.HighlightPattern("0-dimensional holes", "blue")
+        t.HighlightPattern("1-dimensional holes", "blue")
+        t.HighlightPattern("2-dimensional holes", "blue")
         tk.Button(win, text='OK', command=win.destroy).pack()
 
     def info_results(self):

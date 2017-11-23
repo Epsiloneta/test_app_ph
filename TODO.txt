@@ -1,6 +1,8 @@
 information butttons
 menu : about PH
 Message box at the end of computation: Go to bla bla to see results
+http://effbot.org/tkinterbook/menu.htm
+https://www.tutorialspoint.com/python/tk_bitmaps.htm
 
 Ensure that the program finishes when the window closes? is it due to os.system? a non closed file?
 Ensure that everything works as expected on Windows too
