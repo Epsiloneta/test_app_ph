@@ -1,3 +1,7 @@
+information butttons
+menu : about PH
+Message box at the end of computation: Go to bla bla to see results
+
 Ensure that the program finishes when the window closes? is it due to os.system? a non closed file?
 Ensure that everything works as expected on Windows too
 Restructure folder to follow a python package -> https://python-packaging.readthedocs.io/en/latest/
