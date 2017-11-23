@@ -1,5 +1,6 @@
 import Tkinter as tk
 import tkFileDialog
+import os
 # from tkFileDialog import askopenfilename
 
 import re
@@ -39,8 +40,7 @@ class Application(tk.Frame):
     def browse_button_file(self):
         # Allow user to select a directory and store it in global var
         filename = tkFileDialog.askopenfilename()
-        # filename = tkFileDialog.askopenfilename(initialdir = self.folder_path_input+"/",title = "Select file",filetypes = (("jpeg files","*.jpg"),("all files","*.*")))
-        filename = filename.split('/')[-1]
+        filename = os.path.basename(filename)
         self.file_path_input.set(filename)
         print(filename)
 
