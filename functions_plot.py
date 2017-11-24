@@ -1,5 +1,6 @@
 
 ### Plot functions ###
+import os 
 import pickle as pk
 import networkx as nx
 import numpy as np
