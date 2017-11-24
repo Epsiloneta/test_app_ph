@@ -166,14 +166,13 @@ def summary_output(output_path,M_shape,M_max,max_dim,output_name=None):
     max_dim: max homology dimension computed
     """
     if(output_name!=None):
-        os.path.join(output_path,'%s_PDS.csv'%output_name)
         data = pd.read_csv(os.path.join(output_path,'%s_PDS.csv'%output_name),
             index_col = 0) ## index_col to avoid generate a new indexed column
-        summary_file = open(os.path.join(output_path,'%s_summary.csv'%output_name),'wb')
+        summary_file = open(os.path.join(output_path,'%s_summary.txt'%output_name),'wb')
     else:
         data = pd.read_csv(os.path.join(output_path,'outputs_PDS.csv'),
             index_col = 0) ## index_col to avoid generate a new indexed column
-        summary_file = open(os.path.join(output_path,'summary.csv'),'wb')
+        summary_file = open(os.path.join(output_path,'summary.txt'),'wb')
     output_ripser_file = os.path.join(output_path,'output_ripser.txt')
     data_ripser = open(output_ripser_file,'rb').readlines()
     value_range = eval(data_ripser[1].rstrip().split(' ')[-1])
