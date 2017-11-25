@@ -7,6 +7,7 @@ import numpy as np
 import pandas as pd
 import scipy.io
 import timeit
+from ripser_wrapper_lib import ripser_call
 
 def _to_lower_matrix(data_path,M,shape_M):
     """
@@ -81,7 +82,15 @@ def exec_ripser(data_path,ripser_path,output_path,max_dim,input_file='input.txt'
     os.chdir(ripser_path)
     start = timeit.default_timer() 
     print 'input_file ',input_file
-    os.system('./ripser --format %s --dim %i %s/%s > %s/output_ripser.txt'%(format_file,max_dim,data_path,input_file,output_path))
+    ripser_call = './ripser --format %s --dim %i %s/%s > %s/output_ripser.txt'%(format_file,max_dim,data_path,input_file,output_path) 
+    input_file_full = os.path.join(data_path,input_file)
+    output_file_full = os.path.join(output_path,'output_ripser.txt')
+    # \TODO YOU SHOULD ALSO SET THE THRESHOLD!!!
+    ripser_arguments = 'ripser --format %s --dim %i %s'%(format_file,max_dim,input_file_full)
+    
+    ripser_call(ripser_arguments.split(' '),output_file_full)
+    #os.system(ripser_call) # OLD CALL BASED ON executable
+
     # os.chdir(data_path)
     os.chdir(im)
     stop = timeit.default_timer()
