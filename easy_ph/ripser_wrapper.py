@@ -18,5 +18,14 @@ def call_main(args):
 
     lib.main(argc, argv)
 
+def call_main_save_stdout(args,stdout_file):
+    from os import open, close, dup, O_WRONLY, O_CREAT
+    old = dup(1)
+    close(1)
+    open(stdout_file, O_WRONLY|O_CREAT) # should open on 1
+    call_main(args)
+    close(1)
+    dup(old) # should dup to 1
+    close(old) # get rid of left overs
 
- call_main(['ripser','ripser/examples/sphere_3_192.lower_distance_matrix'])
+call_main_save_stdout(['ripser','ripser/examples/sphere_3_192.lower_distance_matrix'],'output_file')
