@@ -186,11 +186,13 @@ class Application(tk.Frame):
 # main_function(data_path,format_type,file_name=None,lower_matrix = False, upper_matrix = False, output_path=None,plots_on=True,normalized=False,max_dim=1):
     
 # \todo error fer q surti pantalleta 
+def run_app():
+    root = tk.Tk()
+    root.grid_columnconfigure(7, minsize=100) 
+    app = Application(master=root)
+    app.mainloop()
 
-
-root = tk.Tk()
-root.grid_columnconfigure(7, minsize=100) 
-app = Application(master=root)
-app.mainloop()
+if __name__=='__main__':
+    run_app()
 
 # root.quit()
