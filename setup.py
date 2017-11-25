@@ -25,7 +25,6 @@ class get_pybind_include(object):
         return pybind11.get_include(self.user)
 
 
-
 ripser_module = Extension('easy_ph.ripser_wrapper_lib',
                     sources = ['ripser/ripser.cpp','easy_ph/ripser_wrapper.cpp'],
                     extra_compile_args=compile_options,

@@ -16,7 +16,6 @@ from functions_plot import *
 # \TODO adapt '\' for windows
 ##########################################################
 userhome = os.path.expanduser('~')
-ripser_path = os.path.join(userhome,'Software/ripser')
 ##########################################################
 
 def main_test(**kwarg):
@@ -86,11 +85,11 @@ def main_function(data_path,format_type,file_name=None,lower_matrix = False, upp
         ## Execfile Ripser (for dim 0,1,2) depending on upper / lower format if input matrix in this way
         if(upper_matrix or lower_matrix):
             if(upper_matrix):
-                exec_ripser(data_path,ripser_path,output_path,max_dim,input_file=file_name,format_file='upper-distance')
+                exec_ripser(data_path,output_path,max_dim,input_file=file_name,format_file='upper-distance')
             else:
-                exec_ripser(data_path,ripser_path,output_path,max_dim,input_file=file_name,format_file='lower-distance')
+                exec_ripser(data_path,output_path,max_dim,input_file=file_name,format_file='lower-distance')
         else: ## normal way
-            exec_ripser(data_path,ripser_path,output_path,max_dim,input_file='input.txt')
+            exec_ripser(data_path,output_path,max_dim,input_file='input.txt')
         ## read output ripser and convert to a nicer output
         read_ripser_output(output_path,max_dim)
         ## create a summary of your data and results
@@ -138,11 +137,11 @@ def main_function(data_path,format_type,file_name=None,lower_matrix = False, upp
             ## Execfile Ripser (for dim 0,1,2) depending on upper / lower format if input matrix in this way
             if(upper_matrix or lower_matrix):
                 if(upper_matrix):
-                    exec_ripser(data_path,ripser_path,output_path,max_dim,input_file=file_name,format_file='upper-distance')
+                    exec_ripser(data_path,output_path,max_dim,input_file=file_name,format_file='upper-distance')
                 else:
-                    exec_ripser(data_path,ripser_path,output_path,max_dim,input_file=file_name,format_file='lower-distance')
+                    exec_ripser(data_path,output_path,max_dim,input_file=file_name,format_file='lower-distance')
             else: ## normal way
-                exec_ripser(data_path,ripser_path,output_path,max_dim,input_file='input.txt')
+                exec_ripser(data_path,output_path,max_dim,input_file='input.txt')
 
             ## read output ripser and convert to a nicer output
             output_name = file_name.split('.%s'%format_type)[0] ## name file withou extension

@@ -70,7 +70,7 @@ def check_format_input(data_path,file_name,lower_matrix,upper_matrix,format_type
 
 
 
-def exec_ripser(data_path,ripser_path,output_path,max_dim,input_file='input.txt',format_file = 'lower-distance'):
+def exec_ripser(data_path,output_path,max_dim,input_file='input.txt',format_file = 'lower-distance'):
     """
     output_name = output name_ripser
     format_file = 'lower-distance', 'upper-distance'
@@ -78,8 +78,6 @@ def exec_ripser(data_path,ripser_path,output_path,max_dim,input_file='input.txt'
     ############# RIPSER ####################
     # high dimension
     ## execfile ripser (OUTPUT from ripser)
-    im = os.getcwd()
-    os.chdir(ripser_path)
     start = timeit.default_timer() 
     print 'input_file ',input_file
     ripser_call = './ripser --format %s --dim %i %s/%s > %s/output_ripser.txt'%(format_file,max_dim,data_path,input_file,output_path) 
@@ -91,8 +89,6 @@ def exec_ripser(data_path,ripser_path,output_path,max_dim,input_file='input.txt'
     ripser_call(ripser_arguments.split(' '),output_file_full)
     #os.system(ripser_call) # OLD CALL BASED ON executable
 
-    # os.chdir(data_path)
-    os.chdir(im)
     stop = timeit.default_timer()
     print 'Ripser execution time '
     print stop - start 
