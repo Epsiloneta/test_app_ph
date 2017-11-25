@@ -44,15 +44,16 @@ setup(name='easy_ph',
       license='MIT',
       packages=['easy_ph'],
       install_requires=[
-		'matplotlib',
-		'networkx',
-		'numpy',
-		'pandas',
-		'scipy',
-		'seaborn'
+        'matplotlib',
+        'networkx',
+        'numpy',
+        'pandas',
+        'scipy',
+        'seaborn',
+        'pybind11>=2.2'
       ],
       entry_points = {
         'console_scripts': ['app_easy_ph=easy_ph.app_Easy_PH:run_app'],
- 	  },
- 	  ext_modules = [ripser_module],
+    },
+    ext_modules = [ripser_module],
       zip_safe=False)
