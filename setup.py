@@ -1,8 +1,9 @@
 from setuptools import setup, Extension
 
-ripser_module = Extension('ripser_lib',
+ripser_module = Extension('easy_ph.ripser_lib',
                     sources = ['ripser/ripser.cpp'],
-                    extra_compile_args=['-std=c++11'])
+                    extra_compile_args=['-std=c++11'],
+                    runtime_library_dirs=['.'])
 
 setup(name='easy_ph',
       version='0.1',

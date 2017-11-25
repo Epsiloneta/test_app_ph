@@ -1,9 +1,11 @@
 import sys
 import ctypes
+import os
 
+so_filepath=os.path.join(os.path.dirname(__file__),'ripser_lib.so')
 
 def call_main(args):
-    lib = ctypes.CDLL('build/lib.linux-x86_64-2.7/ripser_lib.so')    
+    lib = ctypes.CDLL(so_filepath)    
     LP_c_char = ctypes.POINTER(ctypes.c_char)
     LP_LP_c_char = ctypes.POINTER(LP_c_char)
 
@@ -18,7 +20,7 @@ def call_main(args):
 
     lib.main(argc, argv)
 
-def call_main_save_stdout(args,stdout_file):
+def call_ripser_save_stdout(args,stdout_file):
     from os import open, close, dup, O_WRONLY, O_CREAT
     old = dup(1)
     close(1)
@@ -28,4 +30,4 @@ def call_main_save_stdout(args,stdout_file):
     dup(old) # should dup to 1
     close(old) # get rid of left overs
 
-call_main_save_stdout(['ripser','ripser/examples/sphere_3_192.lower_distance_matrix'],'output_file')
+#call_main_save_stdout(['ripser','ripser/examples/sphere_3_192.lower_distance_matrix'],'output_file')
