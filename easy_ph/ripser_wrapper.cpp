@@ -25,7 +25,7 @@ int main_f_wrapper(std::vector<std::string> strings, std::string output_file){
 
 namespace py = pybind11;
 
-PYBIND11_MODULE(python_example, m) {
+PYBIND11_MODULE(ripser_wrapper_lib, m) {
     m.doc() = R"pbdoc(
         Simple wrapper for Ripser C++ executable
     )pbdoc";

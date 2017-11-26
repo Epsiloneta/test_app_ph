@@ -54,6 +54,8 @@ setup(name='easy_ph',
       ],
       entry_points = {
         'console_scripts': ['app_easy_ph=easy_ph.app_Easy_PH:run_app'],
-    },
-    ext_modules = [ripser_module],
+      },
+      ext_modules = [ripser_module],
+      test_suite='nose.collector',
+      tests_require=['nose'],
       zip_safe=False)
