@@ -70,21 +70,24 @@ def check_format_input(data_path,file_name,lower_matrix,upper_matrix,format_type
 
 
 
-def exec_ripser(data_path,output_path,max_dim,input_file='input.txt',format_file = 'lower-distance'):
+def exec_ripser(data_path,ripser_path,output_path,max_dim,input_file='input.txt',format_file = 'lower-distance',threshold=None):
     """
     output_name = output name_ripser
     format_file = 'lower-distance', 'upper-distance'
+    threshold: stop to compute (usually for input networks where you have added values in no-link relationship)
     """
     ############# RIPSER ####################
     # high dimension
     ## execfile ripser (OUTPUT from ripser)
     start = timeit.default_timer() 
     print 'input_file ',input_file
-    ripser_call = './ripser --format %s --dim %i %s/%s > %s/output_ripser.txt'%(format_file,max_dim,data_path,input_file,output_path) 
     input_file_full = os.path.join(data_path,input_file)
     output_file_full = os.path.join(output_path,'output_ripser.txt')
-    # \TODO YOU SHOULD ALSO SET THE THRESHOLD!!!
-    ripser_arguments = 'ripser --format %s --dim %i %s'%(format_file,max_dim,input_file_full)
+
+    if threshold is None:
+        ripser_arguments = 'ripser --format %s --dim %i %s'%(format_file,max_dim,input_file_full)
+    else:
+        ripser_arguments = 'ripser --format %s --dim %i --threshold %f %s'%(format_file,max_dim,threshold,input_file_full)
     
     ripser_call(ripser_arguments.split(' '),output_file_full)
     #os.system(ripser_call) # OLD CALL BASED ON executable
