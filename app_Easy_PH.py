@@ -100,7 +100,7 @@ class Application(tk.Frame):
         self.format6.grid(row=8, column=3,sticky=tk.W)
         ##################################################################
         ## Execute programm button ##
-        self.execute_button = tk.Button(self,command=self.launch_computation,font='Verdana 12 bold')
+        self.execute_button = tk.Button(self,command=self.safe_launch_computation,font='Verdana 12 bold')
         self.execute_button["text"] = "Run program"
         self.execute_button["fg"]   = "blue"
         self.execute_button.grid(row=0, column=6)
@@ -226,16 +226,20 @@ class Application(tk.Frame):
 
         print 'launching Easy PH... '
 
+        main_function(data_path,format_type,file_name=file_name,lower_matrix = lower_matrix, upper_matrix = upper_matrix, 
+            output_path=output_path,plots_on=plots_on,normalized=normalized,max_dim=max_dim,threshold=threshold)
+        if(output_path==None):
+            print 'Go to check your results at %s/results!'%self.folder_path_input.get()
+        else:
+            print 'Go to check your results at %s/results!'%output_path
+
+
+    def safe_launch_computation(self):
         try:
-            main_function(data_path,format_type,file_name=file_name,lower_matrix = lower_matrix, upper_matrix = upper_matrix, 
-                output_path=output_path,plots_on=plots_on,normalized=normalized,max_dim=max_dim,threshold=threshold)
-            if(output_path==None):
-                print 'Go to check your results at %s/results!'%self.folder_path_input.get()
-            else:
-                print 'Go to check your results at %s/results!'%output_path
+            self.launch_computation()
         except Exception as e:
             s = str(e)
-            tkMessageBox.showerror(s)
+            tkMessageBox.showerror("Error",s)
         
 
 
