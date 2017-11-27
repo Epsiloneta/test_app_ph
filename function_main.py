@@ -94,22 +94,14 @@ def main_function(data_path,format_type,file_name=None,lower_matrix = False, upp
         ## Check input and read it
         M_max, M_shape = check_format_input(data_path,file_name,lower_matrix,upper_matrix,format_type=format_type)
         ## Execfile Ripser (for dim 0,1,2) depending on upper / lower format if input matrix in this way
-        if(threshold!=None):
-            if(upper_matrix or lower_matrix):
-                if(upper_matrix):
-                    exec_ripser(data_path,ripser_path,output_path,max_dim,input_file=file_name,format_file='upper-distance',threshold=threshold)
-                else:
-                    exec_ripser(data_path,ripser_path,output_path,max_dim,input_file=file_name,format_file='lower-distance',threshold=threshold)
-            else: ## normal way
-                exec_ripser(data_path,ripser_path,output_path,max_dim,input_file='input.txt',threshold=threshold)
-        else:
-            if(upper_matrix or lower_matrix):
-                if(upper_matrix):
-                    exec_ripser(data_path,ripser_path,output_path,max_dim,input_file=file_name,format_file='upper-distance')
-                else:
-                    exec_ripser(data_path,ripser_path,output_path,max_dim,input_file=file_name,format_file='lower-distance')
-            else: ## normal way
-                exec_ripser(data_path,ripser_path,output_path,max_dim,input_file='input.txt')
+        if(upper_matrix or lower_matrix):
+            if(upper_matrix):
+                exec_ripser(data_path,ripser_path,output_path,max_dim,input_file=file_name,format_file='upper-distance',threshold=threshold)
+            else:
+                exec_ripser(data_path,ripser_path,output_path,max_dim,input_file=file_name,format_file='lower-distance',threshold=threshold)
+        else: ## normal way
+            exec_ripser(data_path,ripser_path,output_path,max_dim,input_file='input.txt',threshold=threshold)
+
         ## read output ripser and convert to a nicer output
         read_ripser_output(output_path,max_dim)
         ## create a summary of your data and results
@@ -154,24 +146,14 @@ def main_function(data_path,format_type,file_name=None,lower_matrix = False, upp
             ## Check input and read it
             M_max, M_shape = check_format_input(data_path,file_name,lower_matrix,upper_matrix,format_type=format_type)
 
-            if(threshold!=None):
-                ## Execfile Ripser (for dim 0,1,2) depending on upper / lower format if input matrix in this way
-                if(upper_matrix or lower_matrix):
-                    if(upper_matrix):
-                        exec_ripser(data_path,ripser_path,output_path,max_dim,input_file=file_name,format_file='upper-distance',threshold=threshold)
-                    else:
-                        exec_ripser(data_path,ripser_path,output_path,max_dim,input_file=file_name,format_file='lower-distance',threshold=threshold)
-                else: ## normal way
-                    exec_ripser(data_path,ripser_path,output_path,max_dim,input_file='input.txt',threshold=threshold)
-            else:
-                ## Execfile Ripser (for dim 0,1,2) depending on upper / lower format if input matrix in this way
-                if(upper_matrix or lower_matrix):
-                    if(upper_matrix):
-                        exec_ripser(data_path,ripser_path,output_path,max_dim,input_file=file_name,format_file='upper-distance')
-                    else:
-                        exec_ripser(data_path,ripser_path,output_path,max_dim,input_file=file_name,format_file='lower-distance')
-                else: ## normal way
-                    exec_ripser(data_path,ripser_path,output_path,max_dim,input_file='input.txt')
+            ## Execfile Ripser (for dim 0,1,2) depending on upper / lower format if input matrix in this way
+            if(upper_matrix or lower_matrix):
+                if(upper_matrix):
+                    exec_ripser(data_path,ripser_path,output_path,max_dim,input_file=file_name,format_file='upper-distance',threshold=threshold)
+                else:
+                    exec_ripser(data_path,ripser_path,output_path,max_dim,input_file=file_name,format_file='lower-distance',threshold=threshold)
+            else: ## normal way
+                exec_ripser(data_path,ripser_path,output_path,max_dim,input_file='input.txt',threshold=threshold)
 
 
             ## read output ripser and convert to a nicer output
