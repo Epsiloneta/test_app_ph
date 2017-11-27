@@ -1,5 +1,6 @@
 import Tkinter as tk
 import tkFileDialog
+import tkMessageBox
 import os
 # from tkFileDialog import askopenfilename
 
@@ -225,13 +226,16 @@ class Application(tk.Frame):
 
         print 'launching Easy PH... '
 
-        main_function(data_path,format_type,file_name=file_name,lower_matrix = lower_matrix, upper_matrix = upper_matrix, 
-            output_path=output_path,plots_on=plots_on,normalized=normalized,max_dim=max_dim,threshold=threshold)
-
-        if(output_path==None):
-            print 'Go to check your results at %s/results!'%self.folder_path_input.get()
-        else:
-            print 'Go to check your results at %s/results!'%output_path
+        try:
+            main_function(data_path,format_type,file_name=file_name,lower_matrix = lower_matrix, upper_matrix = upper_matrix, 
+                output_path=output_path,plots_on=plots_on,normalized=normalized,max_dim=max_dim,threshold=threshold)
+            if(output_path==None):
+                print 'Go to check your results at %s/results!'%self.folder_path_input.get()
+            else:
+                print 'Go to check your results at %s/results!'%output_path
+        except Exception as e:
+            s = str(e)
+            tkMessageBox.showerror(s)
         
 
 
