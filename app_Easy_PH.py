@@ -5,7 +5,7 @@ import os
 
 import re
 from function_main import main_test, check_and_prepare_variables, main_function
-from help_dialogs import info_inputs, info_maxdimension, info_formats, info_results
+from help_dialogs import info_inputs, info_maxdimension, info_formats, info_results, info_threshold
 
 class Application(tk.Frame):
     def __init__(self, master=None):
@@ -144,17 +144,30 @@ class Application(tk.Frame):
         self.dim_max2 = tk.Radiobutton(self, text="2", variable=self.var_dim, value=2)
         self.dim_max2.grid(row=5, column=1,sticky=tk.W)
         ##################################################################
+        ## optional features (threshold - focused on inputs coming from unweighted networks where we have added weight to non existent edges to avoid distance 0)
+        self.label_opt_features = tk.Label(self, text="Optional Features:")
+        self.label_opt_features.grid(row=6, column=1,sticky=tk.W)
+        ## info button 
+        self.info_opt_feature_th = tk.Button(self,text ="info", relief=tk.RAISED,\
+                         bitmap="info",command=info_threshold)
+        self.info_opt_feature_th.grid(row=6,column = 0,sticky=tk.W)
 
+        self.optional_th = tk.Label(self, text="Threshold:")
+        self.optional_th.grid(row=7, column=1,sticky=tk.W)
+        self.entry_th = tk.Entry(self)
+        self.entry_th.grid(row=8, column=1,sticky=tk.W)
 
     def launch_computation(self):
         print 'launching...'
 
         data_path=self.folder_path_input.get()
-        format_type,lower_matrix,upper_matrix,file_name,output_path,file_name = check_and_prepare_variables(
+        format_type,lower_matrix,upper_matrix,file_name,output_path,file_name, threshold = check_and_prepare_variables(
             self.folder_path_input.get(),self.var_format.get(),
             self.file_path_input.get(),
-            self.folder_path_output.get())
-
+            self.folder_path_output.get(),
+            self.entry_th.get()
+            )
+        
         plots_on=self.plots_on.get()
         normalized=self.plots_norm.get()
         max_dim=self.var_dim.get()
@@ -168,12 +181,14 @@ class Application(tk.Frame):
             output_path = output_path,
             plots_on=self.plots_on.get(),
             normalized=self.plots_norm.get(),
-            max_dim=self.var_dim.get())
+            max_dim=self.var_dim.get(),
+            threshold = threshold
+            )
 
         print 'launching Easy PH... '
 
         main_function(data_path,format_type,file_name=file_name,lower_matrix = lower_matrix, upper_matrix = upper_matrix, 
-            output_path=output_path,plots_on=plots_on,normalized=normalized,max_dim=max_dim)
+            output_path=output_path,plots_on=plots_on,normalized=normalized,max_dim=max_dim,threshold=threshold)
 
         if(output_path==None):
             print 'Go to check your results at %s/results!'%self.folder_path_input.get()

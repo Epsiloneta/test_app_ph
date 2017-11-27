@@ -16,7 +16,7 @@ class CustomText(tk.Text):
         tk.Text.__init__(self, *args, **kwargs)
 
     def HighlightPattern(self, pattern, tag, start="1.0", end="end",
-                          regexp=False):
+                          regexp=False, background=None,foreground=None):
         '''Apply the given tag to all text that matches the given pattern
 
         If 'regexp' is set to True, pattern will be treated as a regular
@@ -38,6 +38,10 @@ class CustomText(tk.Text):
             self.mark_set("matchStart", index)
             self.mark_set("matchEnd", "%s+%sc" % (index, count.get()))
             self.tag_add(tag, "matchStart", "matchEnd")
+            # \TODO add features to underline, change color... 
+            # self.tag_config(tag, background="black", foreground="green")
+            # # Creates a bold font
+            # self.bold_font = Font(family="Helvetica", size=14, weight="bold")
 
 
 def info_inputs():
@@ -77,7 +81,7 @@ def info_maxdimension():
           2-dimensional holes: represent voids
           n-dimensional holes: represent cavities of n-dimension
 
-          For example a torus has:
+          For example a torus (also well known as a empty donut) has:
 
           number of 0-dimensional holes: 1
           number of 1-dimensional holes: 2
@@ -151,18 +155,23 @@ def info_formats():
           - 'txt' (lower-dist matrix): lower matrix (without diagonal), columns delimited by ',' and rows by newline.
             Example:
              1,             or  1
-             1,0,               1,0
-             3,0,1,             3,0,1
-             1,0,1,2,           1,0,1,2
+             1,5,               1,5
+             3,5,1,             3,5,1
+             1,5,1,2,           1,5,1,2
         - 'txt' (upper-dist matrix): upper matrix (without diagonal), columns delimited by ',' and rows by newline.
             Example:
-             1,0,1,2,           1,0,1,2
-             3,0,1,             3,0,1
-             1,0,               1,0
+             1,5,1,2,           1,5,1,2
+             3,5,1,             3,5,1
+             1,5,               1,5
              1,             or  1
 
     If you select only a file to analyse format must coincide with the file extension.
     If you just select a Folder data, all your files in that folder with the selected extension will be analysed.
+
+    Attenion!!! Be careful, an adjacency matrix from a network is not an input!!!!! Because 0 entries mean zero distance between a couple of nodes!
+    Network with edges (0,1),(1,2) -> adjacency matrix = array([[0,1,0],[1,0,1],[0,1,0]]) but zeros indicating not edge between (0,2) does not mean distance zero between these points! 
+    Possible solution: input matrix = array([[0,1,2],[1,0,1],[2,1,0]]), where 2 is bigger than other entry and it represents an "infinit" distance between 0 and 2. Many other solutions or values are possible.
+
     '''
 
     # about = re.sub("\n\s*", "\n", about) # remove leading whitespace from each line
@@ -172,4 +181,48 @@ def info_formats():
     t.insert("1.0", about)
     t.HighlightPattern("Generate plots", "blue")
     t.HighlightPattern("big shape matrices", "blue")
+    t.HighlightPattern("Attention!!!","blue")
+    tk.Button(win, text='OK', command=win.destroy).pack()
+
+
+
+# \todo : working on
+def info_threshold():
+    win = tk.Toplevel()
+    win.title("About threshold parameter")
+    about = '''
+    If you want to finish PH computation before pass through all possible thresholds (all possible values in your input data).
+
+    Possible application (Homology without persistence):
+      If you provide an input data coming from, for example, an unweighted network, you can NOT provide an adjacency matrix as input because it does not give any kind of distance between points (nodes). Hence, you need to provide an input file where 0's entries will be converted as an "infinite" distance. 
+
+        Example:
+
+          Adj_matrix = ([0,1,1,0],[1,0,0,0],[1,0,0,1],[0,0,1,0]]) - correspond a path node1 -> node0 -> node2 -> node3
+          Possible input_matrix = ([0,1,1,100],[1,0,100,100],[1,100,0,1],[100,100,1,0]]) -> 0's except diagonal have been converted in 100 (like distance between nodes are very high compared to the real links).
+        
+          threshold = 1 (all values greater mean infinity. You do not need to compute more)
+
+      Moreover, if you have a non-connected network as input, in order to generate an input file and not see how 
+        
+        Example:
+
+          Adj_matrix = ([0,1,0,0],[1,0,0,0],[0,0,0,1],[0,0,1,0]]) - correspond a path node1 -> node0 -> node2 -> node3
+          Possible input_matrix = ([0,1,100,100],[1,0,100,100],[100,100,0,1],[100,100,1,0]]) -> 0's except diagonal have been converted in 100 (like distance between nodes are very high compared to the real links).
+
+          threshold = 1 (all values greater mean infinity. You do not need to compute more, otherwise you will see a connected component at the end of the filtration, that is when we consider threshold > 1 we see that all points are connected)
+
+
+    '''
+
+    # about = re.sub("\n\s*", "\n", about) # remove leading whitespace from each line
+    t=CustomText(win, wrap="word", width=100, height=15, borderwidth=0)
+    t.tag_configure("blue", foreground="blue")
+    t.pack(sid="top",fill="both",expand=True)
+    t.insert("1.0", about)
+    t.HighlightPattern("can NOT provide an adjacency matrix as input", "blue")
+    t.HighlightPattern("input file where 0's entries will be converted as an infinite distance", "blue")
+    t.HighlightPattern("Homology without persistence", "blue")
+    # t.HighlightPattern("optional", "blue")
+    # t.HighlightPattern("compulsory", "blue")
     tk.Button(win, text='OK', command=win.destroy).pack()

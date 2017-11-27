@@ -69,10 +69,11 @@ def check_format_input(data_path,file_name,lower_matrix,upper_matrix,format_type
 
 
 
-def exec_ripser(data_path,ripser_path,output_path,max_dim,input_file='input.txt',format_file = 'lower-distance'):
+def exec_ripser(data_path,ripser_path,output_path,max_dim,input_file='input.txt',format_file = 'lower-distance',threshold=None):
     """
     output_name = output name_ripser
     format_file = 'lower-distance', 'upper-distance'
+    threshold: stop to compute (usually for input networks where you have added values in no-link relationship)
     """
     ############# RIPSER ####################
     # high dimension
@@ -81,8 +82,10 @@ def exec_ripser(data_path,ripser_path,output_path,max_dim,input_file='input.txt'
     os.chdir(ripser_path)
     start = timeit.default_timer() 
     print 'input_file ',input_file
-    os.system('./ripser --format %s --dim %i %s/%s > %s/output_ripser.txt'%(format_file,max_dim,data_path,input_file,output_path))
-    # os.chdir(data_path)
+    if(threshold!=None):
+        os.system('./ripser --format %s --dim %i --threshold %f %s/%s > %s/output_ripser.txt'%(format_file,max_dim,threshold,data_path,input_file,output_path))
+    else:
+        os.system('./ripser --format %s --dim %i %s/%s > %s/output_ripser.txt'%(format_file,max_dim,data_path,input_file,output_path))
     os.chdir(im)
     stop = timeit.default_timer()
     print 'Ripser execution time '

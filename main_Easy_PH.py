@@ -78,7 +78,7 @@ main_function(data_path,'gpickle',max_dim=max_dim, output_path=None,plots_on =Fa
 
 # ---------------------------------------------------------------------------------------------------
 
-
+## now (27 nov 2017 - new parameter threshold added, None by default)
 
 
 # main_function(data_path,'txt',max_dim=max_dim,file_name = 'test_unweighted100.txt',output_path=None,plots_on=True) 
