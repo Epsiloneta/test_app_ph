@@ -7,17 +7,35 @@ import re
 from function_main import main_test, check_and_prepare_variables, main_function
 from help_dialogs import info_inputs, info_maxdimension, info_formats, info_results, info_threshold
 
+
+def donothing():
+   filewin = tk.Toplevel(root)
+   button = tk.Button(filewin, text="Do nothing button")
+   button.pack()
+
 class Application(tk.Frame):
     def __init__(self, master=None):
         tk.Frame.__init__(self, master)
         self.initUI()
+        # self.menubar = tk.Menu(self)
+
+        # aboutmenu = tk.Menu(self.menubar, tearoff=0)
+        # aboutmenu.add_command(label="Persistent Homology", command=donothing)
+        # aboutmenu.add_command(label="Persistent Homology inputs", command=donothing)
+        # aboutmenu.add_cascade(label="File", menu=aboutmenu)
+        # self.helpmenu = tk.Menu(self.menubar, tearoff=0)
+        # helpmenu.add_command(label="Help Index", command=donothing)
+        # helpmenu.add_command(label="About...", command=donothing)
+        # menubar.add_cascade(label="Help", menu=self.helpmenu)
+
+        # self.master.config(menu=self.menubar)
+
 
     def initUI(self):
       
         self.master.title("Easy Persistent Homology")
-        # self.pack(fill=tk.BOTH, expand=1)
-        # self.pack()
-        self.grid(row=0,column=0,columnspan=7,rowspan=8)  
+        self.grid(row=0,column=0,columnspan=7,rowspan=8) 
+        # self.create_menubar()
         self.createWidgets()
         self.createWidgets_optional()
 
@@ -157,12 +175,32 @@ class Application(tk.Frame):
         self.entry_th = tk.Entry(self)
         self.entry_th.grid(row=8, column=1,sticky=tk.W)
 
+    # #### menu ###
+    # def donothing(self):
+    #    filewin = tk.Toplevel(root)
+    #    button = tk.Button(filewin, text="Do nothing button")
+    #    button.pack()
+
+    # def create_menubar(self):
+    #     self.menubar = tk.Menu(self)
+    #     aboutmenu = tk.Menu(self.menubar, tearoff=0)
+    #     aboutmenu.add_command(label="Persistent Homology", command=self.donothing)
+    #     aboutmenu.add_command(label="Persistent Homology inputs", command=self.donothing)
+    #     aboutmenu.add_cascade(label="File", menu=self.aboutmenu)
+
+    #     self.helpmenu = tk.Menu(self.menubar, tearoff=0)
+    #     helpmenu.add_command(label="Help Index", command=self.donothing)
+    #     helpmenu.add_command(label="About...", command=self.donothing)
+    #     menubar.add_cascade(label="Help", menu=self.helpmenu)
+
+
     def launch_computation(self):
         print 'launching...'
 
         data_path=self.folder_path_input.get()
         format_type,lower_matrix,upper_matrix,file_name,output_path,file_name, threshold = check_and_prepare_variables(
-            self.folder_path_input.get(),self.var_format.get(),
+            self.folder_path_input.get(),
+            self.var_format.get(),
             self.file_path_input.get(),
             self.folder_path_output.get(),
             self.entry_th.get()
@@ -204,7 +242,10 @@ class Application(tk.Frame):
 
 
 root = tk.Tk()
+# menubar = tk.Menu(root)
+# root.config(menu=menubar)
 root.grid_columnconfigure(7, minsize=100) 
+
 app = Application(master=root)
 app.mainloop()
 

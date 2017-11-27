@@ -45,7 +45,12 @@ def check_and_prepare_variables(data_path,format_type,file_name,output_path,thre
         aux = file_name.split('.')[-1]
         if(aux!=format_type):
             raise Exception('Format input file does not correspond to File to analyse extension!')
+        return
+
+
         file_name = os.path.basename(file_name)
+
+
 
     if(output_path == ''):
         output_path = None

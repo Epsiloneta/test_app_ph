@@ -139,7 +139,7 @@ def info_results():
     t.HighlightPattern("Normalized plots", "blue")
     tk.Button(win, text='OK', command=win.destroy).pack()
 
-# \todo check if all values positive (info format)
+
 def info_formats():
     win = tk.Toplevel()
     win.title("About Format files")
@@ -172,26 +172,30 @@ def info_formats():
     Network with edges (0,1),(1,2) -> adjacency matrix = array([[0,1,0],[1,0,1],[0,1,0]]) but zeros indicating not edge between (0,2) does not mean distance zero between these points! 
     Possible solution: input matrix = array([[0,1,2],[1,0,1],[2,1,0]]), where 2 is bigger than other entry and it represents an "infinit" distance between 0 and 2. Many other solutions or values are possible.
 
+    Attention!!! Obviously, as a distance matrix not negative values in any kind of input format are accepted!
+
     '''
 
     # about = re.sub("\n\s*", "\n", about) # remove leading whitespace from each line
-    t=CustomText(win, wrap="word", width=120, height=30, borderwidth=0)
+    t=CustomText(win, wrap="word", width=120, height=35, borderwidth=0)
     t.tag_configure("blue", foreground="blue")
     t.pack(sid="top",fill="both",expand=True)
     t.insert("1.0", about)
     t.HighlightPattern("Generate plots", "blue")
     t.HighlightPattern("big shape matrices", "blue")
     t.HighlightPattern("Attention!!!","blue")
+    t.HighlightPattern('distance matrix not negative values', 'blue')
     tk.Button(win, text='OK', command=win.destroy).pack()
 
 
-
-# \todo : working on
 def info_threshold():
     win = tk.Toplevel()
     win.title("About threshold parameter")
     about = '''
-    If you want to finish PH computation before pass through all possible thresholds (all possible values in your input data).
+
+    threshold = None (by default). It accepts integers or floats (Ex. 3 or 3.0 or 0.56)
+
+    If you want to finish PH computation before go through all possible thresholds (all possible values in your input data) you need to provide the point (the threshold) where you want to stop computations.
 
     Possible application (Homology without persistence):
       If you provide an input data coming from, for example, an unweighted network, you can NOT provide an adjacency matrix as input because it does not give any kind of distance between points (nodes). Hence, you need to provide an input file where 0's entries will be converted as an "infinite" distance. 
@@ -216,13 +220,13 @@ def info_threshold():
     '''
 
     # about = re.sub("\n\s*", "\n", about) # remove leading whitespace from each line
-    t=CustomText(win, wrap="word", width=100, height=15, borderwidth=0)
+    t=CustomText(win, wrap="word", width=100, height=40, borderwidth=0)
     t.tag_configure("blue", foreground="blue")
     t.pack(sid="top",fill="both",expand=True)
     t.insert("1.0", about)
     t.HighlightPattern("can NOT provide an adjacency matrix as input", "blue")
     t.HighlightPattern("input file where 0's entries will be converted as an infinite distance", "blue")
     t.HighlightPattern("Homology without persistence", "blue")
-    # t.HighlightPattern("optional", "blue")
+    t.HighlightPattern("finish PH computation before", "blue")
     # t.HighlightPattern("compulsory", "blue")
     tk.Button(win, text='OK', command=win.destroy).pack()
