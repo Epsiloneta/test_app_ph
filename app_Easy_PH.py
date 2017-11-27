@@ -23,36 +23,23 @@ class Application(tk.Frame):
 
 
 
-    def initUI(self):
-      
+    def initUI(self):      
         self.master.title("Easy Persistent Homology")
         self.grid(row=0,column=0,columnspan=7,rowspan=8) 
         # self.create_menubar()
         self.createWidgets()
         self.createWidgets_optional()
 
-    def browse_button_input(self):
-        # Allow user to select a directory and store it in global var
-        # called folder_path
-        # global folder_path_input
-        filename = tkFileDialog.askdirectory()
-        self.folder_path_input.set(filename)
-        print(filename)
+    def browse_file_folder(self,var,b_type='folder',normalize=False):
+        if b_type is 'folder':
+            filename = tkFileDialog.askdirectory()
+        if b_type is 'file':
+            filename = tkFileDialog.askopenfilename()
 
-    def browse_button_output(self):
-        # Allow user to select a directory and store it in global var
-        # called folder_path
-        # global folder_path_output
-        filename = tkFileDialog.askdirectory()
-        self.folder_path_output.set(filename)
-        print(filename)
-    
-    def browse_button_file(self):
-        # Allow user to select a directory and store it in global var
-        filename = tkFileDialog.askopenfilename()
-        filename = os.path.basename(filename)
-        self.file_path_input.set(filename)
-        print(filename)
+        if normalize:
+            filename = os.path.basename(filename)
+
+        var.set(filename)
 
     def createMenu(self):
         self.menubar = tk.Menu(self)
@@ -78,7 +65,9 @@ class Application(tk.Frame):
         self.folder_path_input = tk.StringVar()
         self.label_folder1 = tk.Label(self,textvariable=self.folder_path_input,width=40,height=2)
         self.label_folder1.grid(row=1, column=1)
-        self.button_data_path = tk.Button(self,text="Folder data", command=self.browse_button_input,font='Verdana 12 bold')
+        self.button_data_path = tk.Button(self,text="Folder data", 
+            command=lambda: self.browse_file_folder(self.folder_path_input),
+            font='Verdana 12 bold')
         self.button_data_path.grid(row=0, column=1,sticky=tk.W+tk.E)
 
         ###################################################################
@@ -126,7 +115,8 @@ class Application(tk.Frame):
         self.file_path_input = tk.StringVar()
         self.label_folder3 = tk.Label(self,textvariable=self.file_path_input,width=30,height=2)
         self.label_folder3.grid(row=1, column=3)
-        self.button_file_path = tk.Button(self,text="File to analyse", command=self.browse_button_file)
+        self.button_file_path = tk.Button(self,text="File to analyse", 
+            command=lambda :self.browse_file_folder(self.file_path_input,b_type='file',normalize=True))
         self.button_file_path.grid(row=0, column=3)
 
         ## ----------------------------------------------------------
@@ -136,7 +126,9 @@ class Application(tk.Frame):
         self.folder_path_output = tk.StringVar()
         self.label_folder2 = tk.Label(self,textvariable=self.folder_path_output,width=40,height=2)
         self.label_folder2.grid(row=1, column=5)
-        self.button_output_path = tk.Button(self,text="Output folder", command=self.browse_button_output)
+        self.button_output_path = tk.Button(self,text="Output folder", 
+            command=lambda: self.browse_file_folder(self.folder_path_output)
+            )
         self.button_output_path.grid(row=0, column=5,sticky=tk.W)
 
         ## ----------------------------------------------------------
@@ -249,9 +241,7 @@ class Application(tk.Frame):
 
 
 
-# main_function(data_path,format_type,file_name=None,lower_matrix = False, upper_matrix = False, output_path=None,plots_on=True,normalized=False,max_dim=1):
-    
-# \todo error fer q surti pantalleta 
+# main_function(data_path,format_type,file_name=None,lower_matrix = False, upper_matrix = False, output_path=None,plots_on=True,normalized=False,max_dim=1): 
 
 
 root = tk.Tk()
