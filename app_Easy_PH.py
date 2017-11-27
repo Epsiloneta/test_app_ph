@@ -17,19 +17,10 @@ def donothing():
 class Application(tk.Frame):
     def __init__(self, master=None):
         tk.Frame.__init__(self, master)
+        self.master = master
         self.initUI()
-        # self.menubar = tk.Menu(self)
+        self.createMenu()
 
-        # aboutmenu = tk.Menu(self.menubar, tearoff=0)
-        # aboutmenu.add_command(label="Persistent Homology", command=donothing)
-        # aboutmenu.add_command(label="Persistent Homology inputs", command=donothing)
-        # aboutmenu.add_cascade(label="File", menu=aboutmenu)
-        # self.helpmenu = tk.Menu(self.menubar, tearoff=0)
-        # helpmenu.add_command(label="Help Index", command=donothing)
-        # helpmenu.add_command(label="About...", command=donothing)
-        # menubar.add_cascade(label="Help", menu=self.helpmenu)
-
-        # self.master.config(menu=self.menubar)
 
 
     def initUI(self):
@@ -62,6 +53,20 @@ class Application(tk.Frame):
         filename = os.path.basename(filename)
         self.file_path_input.set(filename)
         print(filename)
+
+    def createMenu(self):
+        self.menubar = tk.Menu(self)
+
+        self.aboutmenu = tk.Menu(self.menubar, tearoff=0)
+        self.aboutmenu.add_command(label="Persistent Homology", command=donothing)
+        self.aboutmenu.add_command(label="Persistent Homology inputs", command=donothing)
+        self.aboutmenu.add_cascade(label="File", menu=self.aboutmenu)
+        self.helpmenu = tk.Menu(self.menubar, tearoff=0)
+        self.helpmenu.add_command(label="Help Index", command=donothing)
+        self.helpmenu.add_command(label="About...", command=donothing)
+        self.menubar.add_cascade(label="Help", menu=self.helpmenu)
+
+        self.master.config(menu=self.menubar)
 
     def createWidgets(self):
         ###################################################################
@@ -250,8 +255,8 @@ class Application(tk.Frame):
 
 
 root = tk.Tk()
-# menubar = tk.Menu(root)
-# root.config(menu=menubar)
+#menubar = tk.Menu(root)
+#root.config(menu=menubar)
 root.grid_columnconfigure(7, minsize=100) 
 
 app = Application(master=root)
