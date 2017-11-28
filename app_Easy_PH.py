@@ -47,7 +47,8 @@ class Application(tk.Frame):
         self.aboutmenu = tk.Menu(self.menubar, tearoff=0)
         self.aboutmenu.add_command(label="Persistent Homology", command=donothing)
         self.aboutmenu.add_command(label="Persistent Homology inputs", command=donothing)
-        self.aboutmenu.add_cascade(label="File", menu=self.aboutmenu)
+        self.menubar.add_cascade(label="File", menu=self.aboutmenu)
+
         self.helpmenu = tk.Menu(self.menubar, tearoff=0)
         self.helpmenu.add_command(label="Help Index", command=donothing)
         self.helpmenu.add_command(label="About...", command=donothing)
@@ -72,7 +73,7 @@ class Application(tk.Frame):
 
         ###################################################################
         ## select format files
-        self.lab_format_files = tk.Label(self,text="Format input file/s",
+        self.lab_format_files = tk.Label(self,text="Input file/s format",
             font = "Verdana 12 bold") #  fg = "blue",bg = "white",
         self.lab_format_files.grid(row=2, column=3,sticky=tk.W)
         self.var_format = tk.StringVar(None,"txt")
