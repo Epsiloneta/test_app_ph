@@ -7,7 +7,7 @@ import os
 import re
 from function_main import main_test, check_and_prepare_variables, main_function
 from help_dialogs import info_inputs, info_maxdimension, info_formats, info_results, info_threshold
-
+from menus_info import about_homology, about_persistent_homology_interpret
 
 def donothing():
    filewin = tk.Toplevel(root)
@@ -45,9 +45,11 @@ class Application(tk.Frame):
         self.menubar = tk.Menu(self)
 
         self.aboutmenu = tk.Menu(self.menubar, tearoff=0)
-        self.aboutmenu.add_command(label="Persistent Homology", command=donothing)
-        self.aboutmenu.add_command(label="Persistent Homology inputs", command=donothing)
-        self.menubar.add_cascade(label="File", menu=self.aboutmenu)
+        self.aboutmenu.add_command(label="Homology and Persistent Homology", command=about_homology)
+        # self.aboutmenu.add_command(label="Persistent Homology inputs", command=donothing)
+        self.aboutmenu.add_command(label="Persistent Homology interpretation", command=about_persistent_homology_interpret)
+        
+        self.menubar.add_cascade(label="About", menu=self.aboutmenu)
 
         self.helpmenu = tk.Menu(self.menubar, tearoff=0)
         self.helpmenu.add_command(label="Help Index", command=donothing)
@@ -174,24 +176,6 @@ class Application(tk.Frame):
         self.entry_th = tk.Entry(self)
         self.entry_th.grid(row=8, column=1,sticky=tk.W)
 
-    # #### menu ###
-    # def donothing(self):
-    #    filewin = tk.Toplevel(root)
-    #    button = tk.Button(filewin, text="Do nothing button")
-    #    button.pack()
-
-    # def create_menubar(self):
-    #     self.menubar = tk.Menu(self)
-    #     aboutmenu = tk.Menu(self.menubar, tearoff=0)
-    #     aboutmenu.add_command(label="Persistent Homology", command=self.donothing)
-    #     aboutmenu.add_command(label="Persistent Homology inputs", command=self.donothing)
-    #     aboutmenu.add_cascade(label="File", menu=self.aboutmenu)
-
-    #     self.helpmenu = tk.Menu(self.menubar, tearoff=0)
-    #     helpmenu.add_command(label="Help Index", command=self.donothing)
-    #     helpmenu.add_command(label="About...", command=self.donothing)
-    #     menubar.add_cascade(label="Help", menu=self.helpmenu)
-
 
     def launch_computation(self):
         print 'launching...'
@@ -246,8 +230,6 @@ class Application(tk.Frame):
 
 
 root = tk.Tk()
-#menubar = tk.Menu(root)
-#root.config(menu=menubar)
 root.grid_columnconfigure(7, minsize=100) 
 
 app = Application(master=root)
