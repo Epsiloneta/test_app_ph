@@ -221,6 +221,7 @@ class Application(tk.Frame):
             self.launch_computation()
         except Exception as e:
             s = str(e)
+            raise(e)
             tkMessageBox.showerror("Error",s)
         
 

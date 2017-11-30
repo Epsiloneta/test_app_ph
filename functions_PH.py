@@ -8,6 +8,8 @@ import pandas as pd
 import scipy.io
 import timeit
 
+# \TODO ojuuuuuuuuuu q si tenim gpickle potser es una adjacency matrix!!! be careful!!!!! Potser hauriem d ficar l'opcio adj matrix i convertirla
+
 def _to_lower_matrix(data_path,M,shape_M):
     """
     M: array (square matrix)

@@ -50,7 +50,7 @@ ax.scatter(p[0], p[1], zs=p[2])
 plt.show()
 
 #### create networks (unweighted) ### 
-size = 100
+size = 200
 M = np.random.random((size,size))
 for i in range(size):
     for j in range(i,size):
@@ -61,8 +61,8 @@ for i in range(size):
                 M[j,i] = 1
                 M[i,j] = 1
             else:
-                M[j,i] = 0
-                M[i,j] = 0
+                M[j,i] = 100
+                M[i,j] = 100
 
 
-np.savetxt('test_unweighted_%i.txt'%size,M,delimiter=',')
+np.savetxt('test_adj_matrix_to_dist_%i_th1.txt'%size,M,delimiter=',')
