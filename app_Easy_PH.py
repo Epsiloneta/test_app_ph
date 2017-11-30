@@ -7,7 +7,7 @@ import os
 import re
 from function_main import main_test, check_and_prepare_variables, main_function
 from help_dialogs import info_inputs, info_maxdimension, info_formats, info_results, info_threshold
-from menus_info import about_homology, about_persistent_homology_interpret
+from menus_info import about_homology, about_persistent_homology_interpret, help_run_program, help_report_bugs_comments
 
 def donothing():
    filewin = tk.Toplevel(root)
@@ -52,8 +52,8 @@ class Application(tk.Frame):
         self.menubar.add_cascade(label="About", menu=self.aboutmenu)
 
         self.helpmenu = tk.Menu(self.menubar, tearoff=0)
-        self.helpmenu.add_command(label="Help Index", command=donothing)
-        self.helpmenu.add_command(label="About...", command=donothing)
+        self.helpmenu.add_command(label="Run Easy Persistent Homology", command=help_run_program)
+        self.helpmenu.add_command(label="Report bugs and comments", command=help_report_bugs_comments)
         self.menubar.add_cascade(label="Help", menu=self.helpmenu)
 
         self.master.config(menu=self.menubar)
@@ -156,11 +156,11 @@ class Application(tk.Frame):
             font = "Verdana 12 bold") # fg = "blue",bg = "white",
         self.lab_dim_max.grid(row=2, column=1,sticky=tk.W)
         self.var_dim = tk.IntVar(None,1)
-        self.dim_max0 = tk.Radiobutton(self, text="0", variable=self.var_dim, value=0)
+        self.dim_max0 = tk.Radiobutton(self, text="0 (connected components)", variable=self.var_dim, value=0)
         self.dim_max0.grid(row=3, column=1,sticky=tk.W)
-        self.dim_max1 = tk.Radiobutton(self, text="1", variable=self.var_dim, value=1)
+        self.dim_max1 = tk.Radiobutton(self, text="1 (cycles)", variable=self.var_dim, value=1)
         self.dim_max1.grid(row=4, column=1,sticky=tk.W)
-        self.dim_max2 = tk.Radiobutton(self, text="2", variable=self.var_dim, value=2)
+        self.dim_max2 = tk.Radiobutton(self, text="2 (voids)", variable=self.var_dim, value=2)
         self.dim_max2.grid(row=5, column=1,sticky=tk.W)
         ##################################################################
         ## optional features (threshold - focused on inputs coming from unweighted networks where we have added weight to non existent edges to avoid distance 0)
@@ -181,6 +181,8 @@ class Application(tk.Frame):
         print 'launching...'
 
         data_path=self.folder_path_input.get()
+
+        print 'fdf ',data_path
         format_type,lower_matrix,upper_matrix,file_name,output_path,file_name, threshold = check_and_prepare_variables(
             self.folder_path_input.get(),
             self.var_format.get(),

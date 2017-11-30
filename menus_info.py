@@ -2,7 +2,7 @@ import Tkinter as tk
 
 from help_dialogs import CustomText
 
-# \todo add references
+# \TODO add references 
 def about_homology():
     win = tk.Toplevel()
     win.title("Homology and Persistent Homology")
@@ -37,10 +37,6 @@ def about_homology():
               number of 1-dimensional holes: 2
               number of 2-dimensional holes: 1
               number of n-dimensional holes with n>2: 0 (for all n>2)
-
-          How to compute it?
-
-          Go to... 
 
           -------------------------------------------------------------------
           PERSISTENT HOMOLOGY
@@ -96,6 +92,23 @@ def about_homology():
           How to compute it?
 
           Go to... 
+          * Classical computation of homology: reduction to Smith normal form: https://www.cs.duke.edu/courses/fall06/cps296.1/Lectures/sec-IV-3.pdf
+          * Recent (and improved) methods to compute Persistent Homology: http://mrzv.org/publications/dualities-persistence/manuscript/
+          * Optimizations by Ripser: http://ulrich-bauer.org/ripser-talk.pdf
+
+          How to understand theory below Persistent Homology?
+
+          Read ...
+
+          Books about Algebraic Topology:
+          * J. R. Munkres. Elements of algebraic topology, volume 2. Addison-Wesley Menlo Park, 1984.
+          * A. Hatcher. Algebraic topology. 2002.
+
+          Papers explaining Persistent Homology and its outputs:
+          * H. Edelsbrunner and J. Harer. Persistent homology-a survey. Contemporary mathematics, 453:257, 2008.
+          * A. Zomorodian and G. Carlsson. Computing persistent homology. Discrete & Computational Geometry, 33(2):249, 2005.
+          * R. Ghrist. Barcodes: the persistent topology of data. Bulletin of the American Mathematical Society, 45(1):61, 2008.
+
         '''
     # about = re.sub("\n\s*", "\n", about) # remove leading whitespace from each line
     t=CustomText(win, wrap="word", width=100, height=25, borderwidth=0)
@@ -104,9 +117,6 @@ def about_homology():
     t.insert("1.0", about)
     # t.HighlightPattern("Homology", "blue")
     # t.HighlightPattern("Persistent Homology", "blue")
-    # t.HighlightPattern("0-dimensional holes", "blue")
-    # t.HighlightPattern("1-dimensional holes", "blue")
-    # t.HighlightPattern("2-dimensional holes", "blue")
     # tk.Button(win, text='OK', command=win.destroy).pack()
 
 def about_persistent_homology_interpret():
@@ -122,12 +132,16 @@ def about_persistent_homology_interpret():
 
           For example: Persistence diagrams can help in shape classification.
 
-          Some applications:
+          Some applications in:
+
+          - Neursocience 
+          - Shape classification
+          -
 
           Go to... 
 
 
-          Compare persistence diagrams:
+          Measures to compare persistence diagrams:
             * qth Wasserstein distance
             * Bottleneck distance
             * Persistence landscape (Bubenik 2012 and 2015).
@@ -143,7 +157,87 @@ def about_persistent_homology_interpret():
     t.insert("1.0", about)
     # t.HighlightPattern("Homology", "blue")
     # t.HighlightPattern("Persistent Homology", "blue")
-    # t.HighlightPattern("0-dimensional holes", "blue")
-    # t.HighlightPattern("1-dimensional holes", "blue")
+    # tk.Button(win, text='OK', command=win.destroy).pack()
+
+
+def help_run_program():
+    win = tk.Toplevel()
+    win.title("How to run Easy Persistent Homology?")
+    about = '''
+    -----------------------------------------------------------------------------------------------------
+        Easy run:
+        1) Select your folder data in 'Folder data' browser button.
+        2) Select file extension / format contained in 'Folder data' that you want to analyse.
+        3) Run program!! Trust default parameters ;) 
+        4) Your results will be saved in 'Folder data' inside a folder called 'results'
+    -----------------------------------------------------------------------------------------------------
+        More detailed run:
+
+        1) Select your folder data in 'Folder data' browser button.
+        2) Do you want to compute persistent homology in only one file? or in some?
+              1.1) If your answer is in only one file, browse your file in 'File to analyse' browser button.
+              1.2) If you have many files to analyse, just put these files in your 'Folder data' and not select any in 'File to analyse'. 
+                   All files in the 'Folder data' with the given extension (and format) will be analysed.
+        3) Do you want to save results in a specific folder?
+            3.1) Just select your predilect folder in 'Output folder' browser. Results will be saved there in a new folder:'results'
+
+            3.2) Doubts: Where results have been saved if I have not select any 'Output folder'?
+              If you have not select any folder in 'Output folder' your results by default will be in a 'results' folder in the selected 'Data Folder'
+        4) Select file extension between possibilites showed in 'Input file/s format'. 
+            You only can select one. Then all files in that format/extension containded in the 'Folder data' will be analysed automatically.
+            In the case that you have selected just a file, name extension of 'File to analyse' have to coincide with the extension and format of 'Input file/s extension'
+        5) What about 'Results'?
+          ## PLOTS
+          5.1) Default option will generate 2 (if your format is lower/upper txt) or 3 plots (otherwise) saved in 'Output folder' or 'Data folder'(by default). You can turn off this option.
+            5.1.1) You can activate option 'Normalized plots' (False by default) then all output plots will be normalized according the maximum value found in the input data.
+              Example: "M" input distance matrix, max_M = max(M) then all values (v_i) in the plots will be converted to (v_i / max_M)
+        
+
+          ## FILES will be always generated automatically.
+          5.2) 'output_PDs.csv': recap all holes for each dimension with its birth and death point. This information serves to plot barcodes and persistence diagrams and analyse a posteriori results or use them as input for another algorithms.
+               'summary.txt': contain a summary of the number of holes for each dimension and how many have persisted across a certain percentage of the total possible life.
+
+        6) Max dimension to compute persistent homology:
+          * Are you interested in compute how evolve connected components?
+            6.1) Compute until dimension 0 if you do not wnat to know about cycles or higher cavities. 
+
+          * Are you interested in know how many cycles, and when they are born and death, you have? (by default 1 is selected)
+            6.2) Select 1, automatically 0-dimensional holes (connected components) and 1-dimensional holes (cycles) will be computed.
+
+          * Are you interested in higher dimensional holes like voids?
+            6.3) Select 2, automatically 0-dimensional holes (connected components), 1-dimensional holes (cycles) and also 2-dimensional holes (voids) will be computed.
+          I am sorry I do not think that you will want to compute higher dimensions... because how are you going to interpret them?? Let me know if you have the answer and I will upgrade the app Easy PH to be able to compute until hihger dimensions ;)
+          
+        7) Very optional feature (but it can be useful!): Threshold
+            In the case that you only are interested in compute persistent homology until a certain baseline (because after that you know that nothing interesting can appear) you just need to put this value here and computations will be also faster if you stop there.
+            Possible examples:
+              * You know that threshold from a certain distance all will be "connected" then you know a priori the result and you do not need to spend computational time in that. 
+              * You are interested in compute just Homology (it can happen), that is, compute the number of n-dimensional holes for only one step/time or let's said frozen dataset. You have to pass as input a fully matrix with values different than zero, then for the connections or distances that you consider infinit you put a greater value than the maximum in the dataset. Then add threshold equal or greater than the maximum value and computation will be faster and after the threshold all will be consider as the same distance.
+
+      -----------------------------------------------------------------------------------------------------
+
+        '''
+    # about = re.sub("\n\s*", "\n", about) # remove leading whitespace from each line
+    t=CustomText(win, wrap="word", width=100, height=25, borderwidth=0)
+    t.tag_configure("blue", foreground="blue")
+    t.pack(sid="top",fill="both",expand=True)
+    t.insert("1.0", about)
     # t.HighlightPattern("2-dimensional holes", "blue")
     # tk.Button(win, text='OK', command=win.destroy).pack()
+
+def help_report_bugs_comments():
+    win = tk.Toplevel()
+    win.title("Report bugs and comments")
+    about = '''
+      If you detect any bug or you have problems to run the program please, contact me and I will try to solve.
+
+      If you have any comment or propose any improvement it will be welcome, just contact me and I will do my best.
+
+      Email: esther.ibanez@isi.it      
+
+        '''
+    # about = re.sub("\n\s*", "\n", about) # remove leading whitespace from each line
+    t=CustomText(win, wrap="word", width=100, height=25, borderwidth=0)
+    t.tag_configure("blue", foreground="blue")
+    t.pack(sid="top",fill="both",expand=True)
+    t.insert("1.0", about)

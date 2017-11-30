@@ -106,14 +106,19 @@ def info_maxdimension():
     t.HighlightPattern("0-dimensional holes", "blue")
     t.HighlightPattern("1-dimensional holes", "blue")
     t.HighlightPattern("2-dimensional holes", "blue")
+    t.HighlightPattern("connected components", "blue")
+    t.HighlightPattern("cycles", "blue")
     tk.Button(win, text='OK', command=win.destroy).pack()
 
 def info_results():
     win = tk.Toplevel()
     win.title("About Results outputs and options")
-    about = '''Results from the computation of Persistent Homology are the following:
+    about = '''
+
+    Results from the computation of Persistent Homology are saved in 'Output Folder' (or 'Data Path' by default) and are the following:
 
           A folder called 'results' will be created in the output folder selection or as default inside the data folder. There you can find: 
+
           - summary.txt: contain a summary of the number of holes for each dimension and how many have persisted across a certain percentage of the total possible life.
           - outputs_PDS.csv: recap all holes for each dimension with its birth and death point.
           
@@ -137,13 +142,25 @@ def info_results():
     t.HighlightPattern("barcode", "blue")
     t.HighlightPattern("Generate plots", "blue")
     t.HighlightPattern("Normalized plots", "blue")
+    t.HighlightPattern("Output Folder", "blue")
     tk.Button(win, text='OK', command=win.destroy).pack()
 
 
 def info_formats():
     win = tk.Toplevel()
     win.title("About Format files")
-    about = '''Files have to codify as a matrix the pairwaise relationship between objects. Input files are like distance matrices (obviously distance matrix are welcome). That is, higher value implies higer distance and viceversa. If you are using correlations you can convert your data using 1-correlation. Be carefull: All values have to be positive!!!
+    about = '''
+
+    Files have to codify, as a matrix (or upper / lower matrix), the pairwaise 'distance / lenght' between objects. 
+
+    Input files are like distance matrices (obviously distance matrix are welcome):
+      That is, higher value implies higer distance and viceversa. 
+      Algorith will group first nearer points than farther.
+
+    - If you are using correlations you can convert your data using 1-correlation. Be carefull: All values have to be positive!!!
+
+    Attention!!! Adjacency matrix from a not fully-connected network (weighted or unweighted) are not inputs!!! 
+                 Any zero in the input means 0 distance between pair of points! (They are only correct if are on the diagonal)
 
     Format files can have the following extensions:
 
@@ -151,7 +168,7 @@ def info_formats():
           - 'npy': commonly python array / matrix 
           - 'gpickle': commonly from networkx library in python
 
-          Recommended format for big shape matrices (that greater then 10^4 points, matrix shape 10^4 x 10^4)
+          Recommended format for big matrices (that greater then 10^4 points, matrix shape 10^4 x 10^4)
           - 'txt' (lower-dist matrix): lower matrix (without diagonal), columns delimited by ',' and rows by newline.
             Example:
              1,             or  1
@@ -168,9 +185,10 @@ def info_formats():
     If you select only a file to analyse format must coincide with the file extension.
     If you just select a Folder data, all your files in that folder with the selected extension will be analysed.
 
-    Attenion!!! Be careful, an adjacency matrix from a network is not an input!!!!! Because 0 entries mean zero distance between a couple of nodes!
+    Attention!!! Be careful, an adjacency matrix from a network is not an input!!!!! Because 0 entries mean zero distance between a couple of nodes!
     Network with edges (0,1),(1,2) -> adjacency matrix = array([[0,1,0],[1,0,1],[0,1,0]]) but zeros indicating not edge between (0,2) does not mean distance zero between these points! 
     Possible solution: input matrix = array([[0,1,2],[1,0,1],[2,1,0]]), where 2 is bigger than other entry and it represents an "infinit" distance between 0 and 2. Many other solutions or values are possible.
+    Then you can use parameter threshold = 1  (in the example explained above) to finish your computation faster. 
 
     Attention!!! Obviously, as a distance matrix not negative values in any kind of input format are accepted!
 
@@ -182,9 +200,17 @@ def info_formats():
     t.pack(sid="top",fill="both",expand=True)
     t.insert("1.0", about)
     t.HighlightPattern("Generate plots", "blue")
-    t.HighlightPattern("big shape matrices", "blue")
+    t.HighlightPattern("txt", "blue")
+    t.HighlightPattern("npy", "blue")
+    t.HighlightPattern("gpickle", "blue")
+    t.HighlightPattern("lower-", "blue")
+    t.HighlightPattern("upper-", "blue")
+    t.HighlightPattern("big matrices", "blue")
     t.HighlightPattern("Attention!!!","blue")
     t.HighlightPattern('distance matrix not negative values', 'blue')
+    t.HighlightPattern('adjacency matrix from a network is not an input', 'blue')
+    t.HighlightPattern('threshold','blue')
+    t.HighlightPattern('Any zero in the input means 0 distance between pair of points!','blue')
     tk.Button(win, text='OK', command=win.destroy).pack()
 
 
