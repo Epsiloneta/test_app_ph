@@ -9,10 +9,10 @@ from function_main import main_test, check_and_prepare_variables, main_function
 from help_dialogs import info_inputs, info_maxdimension, info_formats, info_results, info_threshold
 from menus_info import about_homology, about_persistent_homology_interpret, help_run_program, help_report_bugs_comments
 
-def donothing():
-   filewin = tk.Toplevel(root)
-   button = tk.Button(filewin, text="Do nothing button")
-   button.pack()
+# def donothing():
+#    filewin = tk.Toplevel(root)
+#    button = tk.Button(filewin, text="Do nothing button")
+#    button.pack()
 
 class Application(tk.Frame):
     def __init__(self, master=None):
@@ -46,7 +46,6 @@ class Application(tk.Frame):
 
         self.aboutmenu = tk.Menu(self.menubar, tearoff=0)
         self.aboutmenu.add_command(label="Homology and Persistent Homology", command=about_homology)
-        # self.aboutmenu.add_command(label="Persistent Homology inputs", command=donothing)
         self.aboutmenu.add_command(label="Persistent Homology interpretation", command=about_persistent_homology_interpret)
         
         self.menubar.add_cascade(label="About", menu=self.aboutmenu)
