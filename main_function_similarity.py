@@ -24,17 +24,88 @@ ripser_path = os.path.join(userhome,'Software/ripser')
 #     return()
 
 
-data_path = '/home/esther/Dropbox/ISI_Esther/Easy_PH/tmp/results/'
-data_path = '/home/esther/Dropbox/ISI_Esther/paolo_moretti_networks/generated_networks/results/'
+data_path = '%s/Dropbox/ISI_Esther/Easy_PH/tmp/results/'%userhome
+data_path = '%s/Dropbox/ISI_Esther/paolo_moretti_networks/generated_networks/results/'%userhome
 format_type = 'csv'
 dim=1
 normalized = True
 dim = 1
-plots_on =False
-sim_weighted = False
+plots_on =True
+sim_weighted = False # todo if true
 output_path = None
 sigma = None
 
+# \todo pass max_val_one as input (OPTIONAL)
+def plots_similarity_matrix(sigma_range,sigma_2keep, sim_matrix_list,mean_sim,std_sim,plots_folder,max_val_one=True):
+    """
+    m: similarity matrix (full upper triangular matrix)
+    """
+    if(max_val_one):
+        vmax=1
+    else: 
+        vmax = np.max([np.max(m) for m in sim_matrix_list])
+    plt.figure(figsize=(12,17))
+    if(len(sigma_range)==1):
+        size = sim_matrix_list[0].shape[0]
+        plt.imshow(sim_matrix_list[0],interpolation='None',vmin=0,vmax=vmax)
+        plt.colorbar()
+        plt.title('Similarity matrix: sigma %.3f \n mean similarity: %.3f, std similarity: %.3f'%(sigma_range[0],mean_sim[0],std_sim[0]))
+    else:
+        num_plots = len(sigma_2keep)
+        size = sim_matrix_list[0].shape[0]
+        for i,sigmai in zip(range(1,num_plots+1),sigma_2keep):
+            plt.subplot(2,2,i)
+            plt.imshow(sim_matrix_list[i-1],interpolation='None',vmin=0,vmax=vmax)
+            plt.title('sigma %.3f, mean sim: %.3f, std sim: %.3f'%(sigmai,mean_sim[i-1],std_sim[i-1]))
+        plt.subplots_adjust(bottom=0.1, right=0.8, top=0.9)
+        cax = plt.axes([0.85, 0.1, 0.075, 0.8])
+        plt.colorbar(cax=cax)
+        plt.suptitle('Similarity matrices')
+
+    plot_file_name = os.path.join(plots_folder,'similarity_matrix.png')
+    plt.savefig(plot_file_name)  
+    # plt.show()
+    return()
+
+
+def plot_similarity_curve(sigma_range,mean_sim,std_sim,len_sample,plots_folder):
+    """
+    plot similarity curve ci of mean similarity in the group (ci at 95%)
+    """
+
+    plt.figure(figsize=(8,6))
+    plt.xlabel('sigma',fontsize=20)
+    plt.ylabel('Similarity', fontsize=25)
+    plt.title('Group Similarity of Persistence Diagrams \nConfidence interval of mean similarity', fontsize=20)
+    er = 1.96*std_sim/np.sqrt(len_sample)
+    errorfill(np.array(sigma_range), mean_sim, er,color='b')
+    plot_file_name = os.path.join(plots_folder,'similarity_curve.png')
+    plt.savefig(plot_file_name)  
+    # plt.show()
+    return()
+
+def errorfill(x, y, yerr, color=None, alpha_fill=0.3, ax=None,label=[]):
+    """
+    use:
+        errorfill(x, y_sin, yerr)
+    """
+    ax = ax if ax is not None else plt.gca()
+    # if color is None:
+    #     # color = ax._get_lines.color_cycle.next() # old
+    #     color = ax._get_lines.prop_cycler.next()
+    if np.isscalar(yerr) or len(yerr) == len(y):
+        ymin = y - yerr
+        ymax = y + yerr
+    elif len(yerr) == 2:
+        ymin, ymax = yerr
+    ## scaled
+    ax.plot(x, y ,'o-',color=color,label=label)
+    ax.fill_between(x, ymax, ymin, color=color, alpha=alpha_fill)
+    ### unscaled
+    # ax.plot(range(len(x)),y ,'o-',color=color,label=label)
+    # ax.fill_between(range(len(x)),ymax, ymin, color=color, alpha=alpha_fill)
+    # plt.xticks(range(len(x)), sigma_range)
+    return()
 
 def main_function(data_path,format_type,output_path=None,sim_weighted=False,sigma=None,plots_on=True,normalized=False,dim=1):
     """
@@ -73,12 +144,15 @@ def main_function(data_path,format_type,output_path=None,sim_weighted=False,sigm
     if sigma == None:
         sigma_range = [0.5]
         sigma_2keep = set(np.array(sigma_range))
+        ind = [0]
     elif(type(sigma) == int or type(sigma) == float):
         sigma_range = [sigma]
         sigma_2keep = set(np.array(sigma_range))
+        ind = [0]
     else:
         sigma_range = list(sigma) ## range of sigmas
         if(len(sigma_range)<4):
+            ind = range(len(sigma_range))
             sigma_2keep = set(np.array(sigma_range))
         else:
             ind = map(int,np.linspace(0,len(sigma_range)-1,4))
@@ -152,80 +226,76 @@ def main_function(data_path,format_type,output_path=None,sim_weighted=False,sigm
                 ii_aux = ii_aux +1 ##we only save 4 matrix max
 
             ## to plot similarity curve 
-            a = np.triu_indices_from(sim_matrix,k=1)
+            a = sim_matrix[np.triu_indices_from(sim_matrix,k=1)]
             mean_sim[index_sigma] = np.mean(a)
             std_sim[index_sigma] = np.std(a)
-
+            print 'mean_sim ', mean_sim
+            print 'std_sim ', std_sim
+            len_sample = len(a)
+            print 'len sample ', len_sample
     output_file_path = os.path.join(output_path,'similarity.csv')
     df_sim.to_csv(output_file_path) ## save pandas file with PDs for dim 0,1,2
     ## Plots ## 
-    if(plots_on):
+    if(plots_on): 
+        print 'sigma_range ', sigma_range
+        print 'sigma_2keep ', sigma_2keep
+        print 'sim_matrix_list ',sim_matrix_list
+        print 'ind ', ind
+        print 'mean sim ',mean_sim
+        print 'std_sim ',std_sim
 
-
-        fig, (ax1, ax2) = plt.subplots(1,2)
-        p1 = ax1.imshow(sim_matrix,interpolation = None,aspect='equal',cmap=plt.get_cmap('Reds'))
-        plt.colorbar(p1,ax=ax1)
-        p2 = ax2.imshow(sim_matrix/np.max(sim_matrix),interpolation = None,aspect='equal',cmap=plt.get_cmap('Reds'))
-        plt.colorbar(p2,ax=ax2)
-        plt.show()
-    return(sim_matrix)
-
-
-def plots_similarity_matrix(sigma_range,sigma_2keep, sim_matrix_list,mean_sim,std_sim):
-    """
-    m: similarity matrix (full upper triangular matrix)
-    """
-    if(len(sigma_range)==1):
-        # m = main_function(data_path,format_type,output_path=None,sim_weighted=False,sigma=[0.3,0.6],plots_on=True,normalized=normalized,dim=dim)
-        a = np.triu_indices_from(sim_matrix_list[0],k=1) ## triangular superior
-        mean_sim = np.mean(a)
-        std_sim = np.std(a)
-        plt.imshow(sim_matrix_list[0],interpolation='None')
-        plt.colorbar()
-        plt.title('Similarity matrix: sigma %.3f \n mean similarity: %.3f, std similarity: %.3f'%(sigma_range[0],mean_sim,std_sim))
-        plt.show()
-    else:
-        num_plots = len(sigma_2keep)
-        for i,sigmai in zip(range(1,num_plots+1),sigma_2keep):
-            plt.subplot(2,2,i)
-            a = np.triu_indices_from(sim_matrix_list[i-1],k=1) ## triangular superior
-            mean_sim = np.mean(a)
-            std_sim = np.std(a)
-            plt.imshow(sim_matrix_list[i-1], ,interpolation='None')
-            plt.title('sigma %.3f \n mean sim: %.3f, std sim: %.3f'%(sigmai,list(mean_sim),std_sim))
-
-        plt.subplots_adjust(bottom=0.1, right=0.8, top=0.9)
-        cax = plt.axes([0.85, 0.1, 0.075, 0.8])
-        plt.colorbar(cax=cax)
-        plt.suptitle('Similarity matrices')
-        
-        plt.show()
+        print mean_sim[ind],std_sim[ind]
+        plots_similarity_matrix(sigma_range,sigma_2keep, sim_matrix_list,mean_sim[ind],std_sim[ind],plots_folder)
+        if(len(sigma_range)>1):
+            plot_similarity_curve(sigma_range,mean_sim,std_sim,len_sample,plots_folder)
+    return()
 
 
 
 
+# sim_matrix_list  = [np.array([[  0.00000000e+00,   2.90358844e-04,   6.36422256e-03,
+#           9.91411860e-03],
+#        [  0.00000000e+00,   0.00000000e+00,   4.00827475e-02,
+#           4.57490237e-04],
+#        [  0.00000000e+00,   0.00000000e+00,   0.00000000e+00,
+#           7.80413372e-05],
+#        [  0.00000000e+00,   0.00000000e+00,   0.00000000e+00,
+#           0.00000000e+00]]), np.array([[ 0.        ,  0.00769843,  0.01367194,  0.04855401],
+#        [ 0.        ,  0.        ,  0.43573999,  0.00730463],
+#        [ 0.        ,  0.        ,  0.        ,  0.00325588],
+#        [ 0.        ,  0.        ,  0.        ,  0.        ]]), np.array([[ 0.        ,  0.01981697,  0.02192398,  0.14980117],
+#        [ 0.        ,  0.        ,  0.7195568 ,  0.01705059],
+#        [ 0.        ,  0.        ,  0.        ,  0.01169548],
+#        [ 0.        ,  0.        ,  0.        ,  0.        ]]), np.array([[ 0.        ,  0.02334648,  0.02453401,  0.19059972],
+#        [ 0.        ,  0.        ,  0.76619033,  0.01974415],
+#        [ 0.        ,  0.        ,  0.        ,  0.01442011],
+#        [ 0.        ,  0.        ,  0.        ,  0.        ]])]
 
-m = main_function(data_path,format_type,output_path=None,sim_weighted=False,sigma=[0.3,0.6],plots_on=True,normalized=normalized,dim=dim)
-a = np.triu_indices_from(m,k=1) ## triangular superior
-plt.imshow(m,interpolation='None')
-plt.title('Similarity matrix: sigma %.3f, %s')
-np.mean(a)
-np.std(a)
+# vmax = np.max([np.max(m) for m in sim_matrix_list])
 
-
-# plt.subplot(211)
-# plt.imshow(np.random.random((100, 100)), cmap=plt.cm.BuPu_r)
-# plt.subplot(212)
-# plt.imshow(np.random.random((100, 100)), cmap=plt.cm.BuPu_r)
-
+# plt.figure(figsize=(12,17))
+# num_plots = 4
+# size = sim_matrix_list[0].shape[0]
+# for i in range(1,num_plots+1):
+#     ax = plt.subplot(2,2,i)
+#     plt.imshow(sim_matrix_list[i-1],interpolation='None',vmin=0,vmax=vmax,cmap='Blues')
+#     # plt.imshow(sim_matrix_list[i-1],interpolation='None',vmin=0,vmax=vmax)
+#     plt.yticks([])
+#     ax.plot([-0.5,3.5],[-0.5,3.5],'k')
+#     plt.title('sigma 00000000000000 mean sim: , std sim: ')
 # plt.subplots_adjust(bottom=0.1, right=0.8, top=0.9)
+# # plt.subplots_adjust(bottom=0.1, right=0., top=0.9)
 # cax = plt.axes([0.85, 0.1, 0.075, 0.8])
 # plt.colorbar(cax=cax)
+# plt.suptitle('dgdgdhdhd')
 # plt.show()
 
-# fig, (ax1, ax2) = plt.subplots(1,2)
-# p1 = ax1.imshow(sim_matrix,interpolation = None,aspect='equal',cmap=plt.get_cmap('Reds'))
-# plt.colorbar(p1,ax=ax1)
-# p2 = ax2.imshow(sim_matrix/np.max(sim_matrix),interpolation = None,aspect='equal',cmap=plt.get_cmap('Reds'))
-# plt.colorbar(p2,ax=ax2)
-# plt.show()
+# \TODO similarity weighted
+sigma=[0.1,0.3,0.6,0.7]
+main_function(data_path,format_type,output_path=None,sim_weighted=False,sigma=sigma,plots_on=True,normalized=normalized,dim=dim)
+# m = main_function(data_path,format_type,output_path=None,sim_weighted=False,sigma=[0.3,0.6],plots_on=True,normalized=normalized,dim=dim)
+# a = np.triu_indices_from(m,k=1) ## triangular superior
+# plt.imshow(m,interpolation='None')
+# plt.title('Similarity matrix: sigma %.3f, %s')
+# np.mean(a)
+# np.std(a)
