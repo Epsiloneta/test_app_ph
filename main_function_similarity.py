@@ -36,8 +36,6 @@ output_path = None
 sigma = None
 
 
-# df = pd.read_csv('/home/esther/Dropbox/ISI_Esther/Easy_PH/tmp/results/test1_PDS.csv',index_col=0)
-
 def main_function(data_path,format_type,output_path=None,sim_weighted=False,sigma=None,plots_on=True,normalized=False,dim=1):
     """
     data_path: folder path where data is. It will be used as folder where there are all files to compute PH
@@ -73,63 +71,161 @@ def main_function(data_path,format_type,output_path=None,sim_weighted=False,sigm
             os.makedirs(plots_folder)
 
     if sigma == None:
-        sigma = 0.5
-    if(normalized):
-        print list_files
-        ### prepare computation
-        auto_dist = dict()
-        create_auto_dist(auto_dist,data_path,list_files,weighted=False,sigma=sigma)
+        sigma_range = [0.5]
+        sigma_2keep = set(np.array(sigma_range))
+    elif(type(sigma) == int or type(sigma) == float):
+        sigma_range = [sigma]
+        sigma_2keep = set(np.array(sigma_range))
+    else:
+        sigma_range = list(sigma) ## range of sigmas
+        if(len(sigma_range)<4):
+            sigma_2keep = set(np.array(sigma_range))
+        else:
+            ind = map(int,np.linspace(0,len(sigma_range)-1,4))
+            sigma_2keep = set(np.array(sigma_range)[ind])
 
-    ### compute similarity by pairs
-    names1 = [0]*int(number_files*(number_files-1)/2.)
-    names2 = [0]*int(number_files*(number_files-1)/2.)
-    sigmas_list = np.zeros(int(number_files*(number_files-1)/2.))
-    sim_list = np.zeros(int(number_files*(number_files-1)/2.))
-    sim_matrix = np.zeros((number_files,number_files))
-    ## file_name devi esssere complete path? if yes:base=os.path.basename('/root/dir/sub/file.ext')
-
-    index = 0
-    for i,file_name1 in enumerate(list_files,start=0):
-        for j in range(i+1,number_files): 
-            print 'ij', i,j
-            file_name2 = list_files[j]
-            name1 = os.path.splitext(file_name1)[0]
-            name2 = os.path.splitext(file_name2)[0]
-            names1[index] = name1
-            names2[index] = name2
-
-            complete_path1 = os.path.join(data_path,file_name1)
-            complete_path2 = os.path.join(data_path,file_name2)
-
-            df1 = read_PDs(complete_path1)
-            df2 = read_PDs(complete_path2)
-            F = points_PD(df1,dim=dim)
-            G = points_PD(df2,dim=dim)
-            ## Compute similarity
-            if(normalized):
-                k = kernel_reininghaus_normalized(sigma,F,G,with_auto_dist=auto_dist[(name1,sigma)]+ auto_dist[(name2,sigma)] )
-            else:
-                k = kernel_reininghaus(sigma,F,G)
-            sim_matrix[i,j] = k
-            sim_list[index] = k
-            sigmas_list[index] = sigma
-            index = index +1
 
     ## save results
     df_sim = pd.DataFrame()
-    df_sim['id1'] = names1
-    df_sim['id2'] = names2
-    df_sim['similarity'] = sim_list
-    df_sim['sigma'] = sigmas_list
+    ## save max 4 similarity matrix 
+    sim_matrix_list = [0]*len(sigma_range)
+    mean_sim = np.zeros(len(sigma_range))
+    std_sim = np.zeros(len(sigma_range))
+    ii_aux = 0 
+    #############################################
+    for index_sigma,sigma in enumerate(sigma_range):
+        print 'sigma ', sigma
+        if(normalized):
+            print list_files
+            ### prepare computation
+            auto_dist = dict()
+            create_auto_dist(auto_dist,data_path,list_files,weighted=False,sigma=sigma)
+
+        ### compute similarity by pairs
+        names1 = [0]*int(number_files*(number_files-1)/2.)
+        names2 = [0]*int(number_files*(number_files-1)/2.)
+        sigmas_list = np.zeros(int(number_files*(number_files-1)/2.))
+        sim_list = np.zeros(int(number_files*(number_files-1)/2.))
+
+        sim_matrix = np.zeros((number_files,number_files))
+        ## file_name devi esssere complete path? if yes:base=os.path.basename('/root/dir/sub/file.ext')
+
+        index = 0
+        for i,file_name1 in enumerate(list_files,start=0):
+            for j in range(i+1,number_files): 
+                print 'ij', i,j
+                file_name2 = list_files[j]
+                name1 = os.path.splitext(file_name1)[0]
+                name2 = os.path.splitext(file_name2)[0]
+                names1[index] = name1
+                names2[index] = name2
+
+                complete_path1 = os.path.join(data_path,file_name1)
+                complete_path2 = os.path.join(data_path,file_name2)
+
+                df1 = read_PDs(complete_path1)
+                df2 = read_PDs(complete_path2)
+                F = points_PD(df1,dim=dim)
+                G = points_PD(df2,dim=dim)
+                ## Compute similarity
+                if(normalized):
+                    k = kernel_reininghaus_normalized(sigma,F,G,with_auto_dist=auto_dist[(name1,sigma)]+ auto_dist[(name2,sigma)] )
+                else:
+                    k = kernel_reininghaus(sigma,F,G)
+
+                ## upgrade similarity matrix 
+                sim_matrix[i,j] = k
+
+                sim_list[index] = k
+                sigmas_list[index] = sigma
+                index = index +1
+        aux_data = pd.DataFrame()
+        aux_data['id1'] = names1
+        aux_data['id2'] = names2
+        aux_data['similarity'] = sim_list
+        aux_data['sigma'] = sigmas_list
+        df_sim = df_sim.append(aux_data,ignore_index=True)
+
+        if(plots_on):
+            if(sigma in sigma_2keep):
+                sim_matrix_list[ii_aux] = sim_matrix
+                ii_aux = ii_aux +1 ##we only save 4 matrix max
+
+            ## to plot similarity curve 
+            a = np.triu_indices_from(sim_matrix,k=1)
+            mean_sim[index_sigma] = np.mean(a)
+            std_sim[index_sigma] = np.std(a)
+
     output_file_path = os.path.join(output_path,'similarity.csv')
     df_sim.to_csv(output_file_path) ## save pandas file with PDs for dim 0,1,2
-          
     ## Plots ## 
     if(plots_on):
+
+
         fig, (ax1, ax2) = plt.subplots(1,2)
         p1 = ax1.imshow(sim_matrix,interpolation = None,aspect='equal',cmap=plt.get_cmap('Reds'))
         plt.colorbar(p1,ax=ax1)
         p2 = ax2.imshow(sim_matrix/np.max(sim_matrix),interpolation = None,aspect='equal',cmap=plt.get_cmap('Reds'))
         plt.colorbar(p2,ax=ax2)
         plt.show()
+    return(sim_matrix)
 
+
+def plots_similarity_matrix(sigma_range,sigma_2keep, sim_matrix_list,mean_sim,std_sim):
+    """
+    m: similarity matrix (full upper triangular matrix)
+    """
+    if(len(sigma_range)==1):
+        # m = main_function(data_path,format_type,output_path=None,sim_weighted=False,sigma=[0.3,0.6],plots_on=True,normalized=normalized,dim=dim)
+        a = np.triu_indices_from(sim_matrix_list[0],k=1) ## triangular superior
+        mean_sim = np.mean(a)
+        std_sim = np.std(a)
+        plt.imshow(sim_matrix_list[0],interpolation='None')
+        plt.colorbar()
+        plt.title('Similarity matrix: sigma %.3f \n mean similarity: %.3f, std similarity: %.3f'%(sigma_range[0],mean_sim,std_sim))
+        plt.show()
+    else:
+        num_plots = len(sigma_2keep)
+        for i,sigmai in zip(range(1,num_plots+1),sigma_2keep):
+            plt.subplot(2,2,i)
+            a = np.triu_indices_from(sim_matrix_list[i-1],k=1) ## triangular superior
+            mean_sim = np.mean(a)
+            std_sim = np.std(a)
+            plt.imshow(sim_matrix_list[i-1], ,interpolation='None')
+            plt.title('sigma %.3f \n mean sim: %.3f, std sim: %.3f'%(sigmai,list(mean_sim),std_sim))
+
+        plt.subplots_adjust(bottom=0.1, right=0.8, top=0.9)
+        cax = plt.axes([0.85, 0.1, 0.075, 0.8])
+        plt.colorbar(cax=cax)
+        plt.suptitle('Similarity matrices')
+        
+        plt.show()
+
+
+
+
+
+m = main_function(data_path,format_type,output_path=None,sim_weighted=False,sigma=[0.3,0.6],plots_on=True,normalized=normalized,dim=dim)
+a = np.triu_indices_from(m,k=1) ## triangular superior
+plt.imshow(m,interpolation='None')
+plt.title('Similarity matrix: sigma %.3f, %s')
+np.mean(a)
+np.std(a)
+
+
+# plt.subplot(211)
+# plt.imshow(np.random.random((100, 100)), cmap=plt.cm.BuPu_r)
+# plt.subplot(212)
+# plt.imshow(np.random.random((100, 100)), cmap=plt.cm.BuPu_r)
+
+# plt.subplots_adjust(bottom=0.1, right=0.8, top=0.9)
+# cax = plt.axes([0.85, 0.1, 0.075, 0.8])
+# plt.colorbar(cax=cax)
+# plt.show()
+
+# fig, (ax1, ax2) = plt.subplots(1,2)
+# p1 = ax1.imshow(sim_matrix,interpolation = None,aspect='equal',cmap=plt.get_cmap('Reds'))
+# plt.colorbar(p1,ax=ax1)
+# p2 = ax2.imshow(sim_matrix/np.max(sim_matrix),interpolation = None,aspect='equal',cmap=plt.get_cmap('Reds'))
+# plt.colorbar(p2,ax=ax2)
+# plt.show()
