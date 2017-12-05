@@ -1,15 +1,14 @@
 import sys
 import os
-computer = os.getlogin()
+# computer = os.getlogin()
 import pickle as pk
 import networkx as nx
 import numpy as np
 import pylab as plt
 import scipy.io
-import timeit
 import pandas as pd
-sys.path.append('/home/%s/Dropbox/ISI_Esther/templates_stable/'%computer) #IMPORTANT (path holes)
-from functions_plot_persistence_diagram import * 
+# sys.path.append('/home/%s/Dropbox/ISI_Esther/templates_stable/'%computer) #IMPORTANT (path holes)
+# from functions_plot_persistence_diagram import * 
 
 
 
