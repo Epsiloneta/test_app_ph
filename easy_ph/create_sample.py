@@ -20,6 +20,7 @@ nx.write_gpickle(g, 'test1.gpickle')
 
 # save 2version network
 nx.write_gpickle(g, 'test_nx_%s.gpickle'%nx.__version__)
+# G = nx.read_gpickle(file_full_path)
 
 
 ## test esfera ##
