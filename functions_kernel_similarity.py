@@ -120,9 +120,11 @@ def C_parameter(PDS,p):
 
 
 ### \todo: read another kind of formats without dim or just ripser outputs
-def read_PDs(file_path):
+def read_PDs(file_path,delimiter=','):
     if(file_path.split('.')[-1] =='csv'):
         df = pd.read_csv(file_path,index_col=0)
+    if(file_path.split('.')[-1] =='txt'):
+        pd.read_csv(file_path,delimiter=delimiter)     
     return(df)
 
 
@@ -141,7 +143,7 @@ def points_PD(df,dim=None):
 ## autodistance 
 # \TODO do with weighted kernel too
 # sigma_range = np.linspace(0.01,2,30)
-def create_auto_dist(auto_dist,data_path,list_files,weighted=False,sigma=.5):
+def create_auto_dist(auto_dist,data_path,list_files,weighted=False,sigma=.5,delimiter=delimiter):
     """
     list_files = 
     auto_dist (dict)
@@ -150,7 +152,7 @@ def create_auto_dist(auto_dist,data_path,list_files,weighted=False,sigma=.5):
     """
     for file_name1 in list_files:
         complete_path = os.path.join(data_path,file_name1)
-        df = read_PDs(complete_path)
+        df = read_PDs(complete_path,delimiter=delimiter)
         name1 = os.path.splitext(file_name1)[0]
         D = points_PD(df,dim=1)
         auto_dist[(name1,sigma)] = kernel_reininghaus(sigma,D,D)

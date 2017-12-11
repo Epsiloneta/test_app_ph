@@ -53,7 +53,7 @@ def main_test(**kwarg):
 #     return(format_type,lower_matrix,upper_matrix,file_name,output_path,file_name,threshold)
 
 
-def main_function_similarity(data_path,format_type,output_path=None,sim_weighted=False,sigma=None,plots_on=True,normalized=False,dim=1,vmax=True):
+def main_function_similarity(data_path,format_type,output_path=None,sim_weighted=False,sigma=None,plots_on=True,normalized=False,dim=1,vmax=True,delimiter=','):
     """
     Create output folder with or without additional folder for plots. Compute similarity matrix between pairs of files in a folder data. Compute CI at 95% of the mean similarity curve across a range of sigmas (given).
     Create result file with similarities between pairs of files.
@@ -125,7 +125,7 @@ def main_function_similarity(data_path,format_type,output_path=None,sim_weighted
             print list_files
             ### prepare computation
             auto_dist = dict()
-            create_auto_dist(auto_dist,data_path,list_files,weighted=False,sigma=sigma)
+            create_auto_dist(auto_dist,data_path,list_files,weighted=False,sigma=sigma,delimiter=delimiter)
 
         ### compute similarity by pairs
         names1 = [0]*int(number_files*(number_files-1)/2.)
@@ -149,8 +149,8 @@ def main_function_similarity(data_path,format_type,output_path=None,sim_weighted
                 complete_path1 = os.path.join(data_path,file_name1)
                 complete_path2 = os.path.join(data_path,file_name2)
 
-                df1 = read_PDs(complete_path1)
-                df2 = read_PDs(complete_path2)
+                df1 = read_PDs(complete_path1,delimiter=delimiter)
+                df2 = read_PDs(complete_path2,delimiter=delimiter)
                 F = points_PD(df1,dim=dim)
                 G = points_PD(df2,dim=dim)
                 ## Compute similarity

@@ -19,6 +19,24 @@ userhome = os.path.expanduser('~')
 ripser_path = os.path.join(userhome,'Software/ripser')
 ##########################################################
 
+# columns birth, death and dimH
+# .txt delimiter ',' or '\t'
+## input 
+# birth,death,persistence,dimH
+# 0,1,1,0
+# 0,1,1,0
+# 0,1,1,0
+# 0,1,1,0
+# 0,1,1,0
+# 0,1,1,0
+
+# birth	death	persistence	dimH
+# 0	1	1	0
+# 0	1	1	0
+# 0	1	1	0
+# 0	1	1	0
+# 0	1	1	0
+# 0	1	1	0
 
 
 # \TODO add new format, .txt with correct columns
@@ -31,10 +49,10 @@ plots_on =True
 sim_weighted = False # todo if true
 output_path = None
 sigma = None
-
+delimiter = ','
 # \TODO similarity weighted
 sigma=[0.1,0.3,0.6,0.7]
-main_function_similarity(data_path,format_type,output_path=None,sim_weighted=False,sigma=sigma,plots_on=True,normalized=normalized,dim=dim,vmax=True)
+main_function_similarity(data_path,format_type,output_path=None,sim_weighted=False,sigma=sigma,plots_on=True,normalized=normalized,dim=dim,vmax=True,delimiter=delimiter)
 
 
 # sim_matrix_list  = [np.array([[  0.00000000e+00,   2.90358844e-04,   6.36422256e-03,
