@@ -13,3 +13,7 @@ Ensure that everything works as expected on Windows too
 Restructure folder to follow a python package -> https://python-packaging.readthedocs.io/en/latest/
 Add the Ripser C++ library as an C++ extension and compile it within the package -> https://docs.python.org/2.7/extending/building.html
 Publish it to pipy
+
+
+Solve networkx version problems (v2.0 doesnt read v1.x gpickle and viceversa)
+https://networkx.github.io/documentation/latest/release/migration_guide_from_1.x_to_2.0.html

@@ -18,6 +18,10 @@ np.savetxt('test1.csv',M,delimiter=',')
 np.save('test1.npy',M)
 nx.write_gpickle(g, 'test1.gpickle')
 
+# save 2version network
+nx.write_gpickle(g, 'test_nx_%s.gpickle'%nx.__version__)
+
+
 ## test esfera ##
 # esfera a R^3 es fer X,Y,Z realitzacions d'una normal N(0,1)
 # aleshores p = (x,y,z)/sqrt(x**2+y**2+z**2) és un punt sobre la esfera
