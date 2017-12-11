@@ -43,7 +43,6 @@ from function_main import *
 # \todo: add more input type / format 
 
 # ## parameters 
-ripser_path = '/home/%s/Software/ripser'%computer
 data_path = '/home/%s/Dropbox/ISI_Esther/Easy_PH/tmp'%computer
 output_path = '/home/%s/Dropbox/ISI_Esther/Easy_PH/tmp'%computer
 file_name = 'test1.txt'
@@ -57,7 +56,6 @@ max_dim = 1
 data_folder = '/home/esther/Documents/data_paolo_moretti/redes_hmn2/'
 # file_net = 'edgelist_n1024_s8_fl4'#n1024 number nodes
 
-ripser_path = '/home/%s/Software/ripser'%computer
 data_path = '%smatrices'%data_folder
 file_name = 'edgelist_n1024_s8_fl4_matrix.txt'
 
@@ -71,7 +69,6 @@ max_dim = 1
 
 ## ba matrices 
 data_path = '/home/esther/Documents/data_paolo_moretti/ba_graphs/'
-ripser_path = '/home/%s/Software/ripser'%computer
 max_dim = 1
 main_function(data_path,'gpickle',max_dim=max_dim, output_path=None,plots_on =False) 
 
@@ -118,7 +115,7 @@ main_function(data_path,'gpickle',max_dim=max_dim, output_path=None,plots_on =Fa
 # ## Check input and read it
 # M_max, M_shape = check_format_input(data_path,file_name,format_type='txt')
 # ## Execfile Ripser (for dim 0,1,2)
-# exec_ripser(data_path,ripser_path,input_file='input.txt')
+# exec_ripser(data_path,input_file='input.txt')
 # ## read output ripser and convert to a nicer output
 # read_ripser_output(output_path)
 # ## create a summary of your data and results
