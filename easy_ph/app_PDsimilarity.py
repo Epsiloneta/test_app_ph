@@ -5,9 +5,15 @@ import os
 # from tkFileDialog import askopenfilename
 
 import re
-from function_main import main_test, check_and_prepare_variables, main_function
 from help_dialogs import info_inputs, info_maxdimension, info_formats, info_results, info_threshold
 from menus_info import about_homology, about_persistent_homology_interpret, help_run_program, help_report_bugs_comments
+
+## file with kernel similarity functions
+from functions_kernel_similarity import *
+## file with plots for kernel similarity
+from functions_plot_kernel import plots_similarity_matrix, error_fill, plot_similarity_curve
+## file with the main function to compute similarity
+from main_function_similarity import main_function_similarity
 
 # def donothing():
 #    filewin = tk.Toplevel(root)
@@ -24,7 +30,7 @@ class Application(tk.Frame):
 
 
     def initUI(self):      
-        self.master.title("Easy Persistent Homology")
+        self.master.title("PDs Similarity")
         self.grid(row=0,column=0,columnspan=7,rowspan=8) 
         # self.create_menubar()
         self.createWidgets()
@@ -112,16 +118,6 @@ class Application(tk.Frame):
                          bitmap="info",command=info_results)
         self.info_results1.grid(row=2,column = 4,sticky=tk.W)
         ## ------------- OPTIONAL ----------------------------------
-        ## select specific file to analyse
-        # # self.data_file = tk.askopenfilename(initialdir = "C:/<whatever>")
-        self.file_path_input = tk.StringVar()
-        self.label_folder3 = tk.Label(self,textvariable=self.file_path_input,width=30,height=2)
-        self.label_folder3.grid(row=1, column=3)
-        self.button_file_path = tk.Button(self,text="File to analyse", 
-            command=lambda :self.browse_file_folder(self.file_path_input,b_type='file',normalize=True))
-        self.button_file_path.grid(row=0, column=3)
-
-        ## ----------------------------------------------------------
         ## output data path
         # \todo add output folder as optional and data folder as default
         # \todo add input folder starting path from: on sigui
@@ -181,7 +177,7 @@ class Application(tk.Frame):
 
         data_path=self.folder_path_input.get()
 
-        print 'data path ',data_path
+        print 'fdf ',data_path
         format_type,lower_matrix,upper_matrix,file_name,output_path,file_name, threshold = check_and_prepare_variables(
             self.folder_path_input.get(),
             self.var_format.get(),
@@ -227,14 +223,14 @@ class Application(tk.Frame):
         
 
 
-# main_function(data_path,format_type,file_name=None,lower_matrix = False, upper_matrix = False, output_path=None,plots_on=True,normalized=False,max_dim=1):
-    
-# \todo error fer q surti pantalleta 
-def run_app():
-    root = tk.Tk()
-    root.grid_columnconfigure(7, minsize=100) 
-    app = Application(master=root)
-    app.mainloop()
 
-if __name__=='__main__':
-    run_app()
+# main_function(data_path,format_type,file_name=None,lower_matrix = False, upper_matrix = False, output_path=None,plots_on=True,normalized=False,max_dim=1): 
+
+
+root = tk.Tk()
+root.grid_columnconfigure(7, minsize=100) 
+
+app = Application(master=root)
+app.mainloop()
+
+# root.quit()

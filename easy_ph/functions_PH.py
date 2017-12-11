@@ -9,6 +9,8 @@ import scipy.io
 import timeit
 from ripser_wrapper_lib import ripser_call
 
+# \TODO ojuuuuuuuuuu q si tenim gpickle potser es una adjacency matrix!!! be careful!!!!! Potser hauriem d ficar l'opcio adj matrix i convertirla
+
 def _to_lower_matrix(data_path,M,shape_M):
     """
     M: array (square matrix)
@@ -70,7 +72,7 @@ def check_format_input(data_path,file_name,lower_matrix,upper_matrix,format_type
 
 
 
-def exec_ripser(data_path,ripser_path,output_path,max_dim,input_file='input.txt',format_file = 'lower-distance',threshold=None):
+def exec_ripser(data_path,output_path,max_dim,input_file='input.txt',format_file = 'lower-distance',threshold=None):
     """
     output_name = output name_ripser
     format_file = 'lower-distance', 'upper-distance'

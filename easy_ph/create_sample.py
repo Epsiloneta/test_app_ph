@@ -18,6 +18,10 @@ np.savetxt('test1.csv',M,delimiter=',')
 np.save('test1.npy',M)
 nx.write_gpickle(g, 'test1.gpickle')
 
+# save 2version network
+nx.write_gpickle(g, 'test_nx_%s.gpickle'%nx.__version__)
+# G = nx.read_gpickle(file_full_path)
+
 ## test esfera ##
 # esfera a R^3 es fer X,Y,Z realitzacions d'una normal N(0,1)
 # aleshores p = (x,y,z)/sqrt(x**2+y**2+z**2) és un punt sobre la esfera
@@ -50,7 +54,7 @@ ax.scatter(p[0], p[1], zs=p[2])
 plt.show()
 
 #### create networks (unweighted) ### 
-size = 100
+size = 200
 M = np.random.random((size,size))
 for i in range(size):
     for j in range(i,size):
@@ -61,8 +65,8 @@ for i in range(size):
                 M[j,i] = 1
                 M[i,j] = 1
             else:
-                M[j,i] = 0
-                M[i,j] = 0
+                M[j,i] = 100
+                M[i,j] = 100
 
 
-np.savetxt('test_unweighted_%i.txt'%size,M,delimiter=',')
+np.savetxt('test_adj_matrix_to_dist_%i_th1.txt'%size,M,delimiter=',')
