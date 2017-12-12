@@ -22,6 +22,7 @@ nx.write_gpickle(g, 'test1.gpickle')
 nx.write_gpickle(g, 'test_nx_%s.gpickle'%nx.__version__)
 # G = nx.read_gpickle(file_full_path)
 
+
 ## test esfera ##
 # esfera a R^3 es fer X,Y,Z realitzacions d'una normal N(0,1)
 # aleshores p = (x,y,z)/sqrt(x**2+y**2+z**2) és un punt sobre la esfera

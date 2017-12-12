@@ -41,13 +41,14 @@ def check_format_input(data_path,file_name,lower_matrix,upper_matrix,format_type
         max_val = 0; shape_M = 1
         with open(file_full_path,'r') as f:
             for lin in f:
-                shape_M = shape_M +1
-                lin = lin.strip().split(',')
-                if(lin[-1]==''):
-                    lin = lin[:-1]
-                aux = np.max(map(float,lin))
-                if(aux > max_val):
-                    max_val = aux
+                if(lin!='\n'): ## solution for upper with empty \n
+                    shape_M = shape_M +1
+                    lin = lin.strip().split(',')
+                    if(lin[-1]==''):
+                        lin = lin[:-1] ## solution for lower
+                    aux = np.max(map(float,lin))
+                    if(aux > max_val):
+                        max_val = aux
     else: ## create lower matrix
         if(format_type == 'gpickle'):
             G = nx.read_gpickle(file_full_path)
