@@ -1,3 +1,4 @@
 include README.rst
 include ripser/*
 include ripser/examples/*
+include pybind_setup.py
