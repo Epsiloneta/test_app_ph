@@ -1,0 +1,13 @@
+{'lower_matrix': False, 'file_name': 'example_upper_matrix.txt', 'data_path': '/home/epsilon/Dropbox/ISI_Esther/Easy_PH/examples/examples_lower_upper', 'plots_on': True, 'output_path': None, 'normalized': False, 'threshold': None, 'upper_matrix': True, 'max_dim': 1, 'format_type': 'txt'}
+
+main_function('/home/epsilon/Dropbox/ISI_Esther/Easy_PH/examples/examples_lower_upper',
+	'txt',
+	file_name='example_upper_matrix.txt',
+	lower_matrix = False, 
+	upper_matrix = True, 
+	output_path=None,
+	plots_on=True,
+	normalized=False,
+	max_dim=1,
+	threshold=None)
+
