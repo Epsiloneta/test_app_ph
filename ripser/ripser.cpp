@@ -35,6 +35,7 @@ with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <queue>
 #include <sstream>
 #include <unordered_map>
+#include <iterator>
 
 #ifdef USE_GOOGLE_HASHMAP
 #include <sparsehash/sparse_hash_map>

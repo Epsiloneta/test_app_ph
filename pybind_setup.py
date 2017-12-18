@@ -1,5 +1,6 @@
 from setuptools.command.build_ext import build_ext
 import sys
+import setuptools
 
 ## CODE BASED ON https://github.com/pybind/python_example
 
