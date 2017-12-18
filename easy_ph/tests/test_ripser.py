@@ -17,9 +17,15 @@ class TestRipser(TestCase):
         f.close()
         tmp_file_path = f.name
 
+        # creation of example input file
+        in_f = tempfile.NamedTemporaryFile(delete=False)
+        in_f.write('\n1\n1,2\n,1,2,2\n')
+        in_f.close()
+        in_tmp_file_path = in_f.name
+
         # actual call to ripser
         ripser_lib.ripser_call(['ripser',
-            os.path.join(base_dir,'ripser/examples/sphere_3_192.lower_distance_matrix')],
+            in_tmp_file_path],
             tmp_file_path)
 
         # read the output file
