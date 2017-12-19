@@ -15,7 +15,7 @@ To build a source distribution use
     
 to build a wheel use
 
-    pip wheel --no-dist .
+    pip wheel --no-deps .
 
 To build a universal wheel use 
   
