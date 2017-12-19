@@ -15,7 +15,7 @@ To build a source distribution use
     
 to build a wheel use
 
-    python wheel .
+    pip wheel --no-dist .
 
 To build a universal wheel use 
   
