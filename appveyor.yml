@@ -19,6 +19,7 @@ build_script:
   - cibuildwheel --output-dir wheelhouse
 
 test_script:
+  - pip install pybind11
   - python setup.py test
 
 artifacts:
