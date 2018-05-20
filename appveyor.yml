@@ -2,6 +2,9 @@ image:
   - Visual Studio 2015
 
 environment:
+  global:
+    DISTUTILS_USE_SDK: 1
+    MSSdk: 1
   matrix:
     - PYTHON: "C:\\Python27"
       CPP: 14
@@ -10,6 +13,7 @@ environment:
   
 
 build_script:
+  - '"%VS140COMNTOOLS%\..\..\VC\vcvarsall.bat" %PLATFORM%'
   - pip install cibuildwheel
   - pip install pybind11
   - cibuildwheel --output-dir wheelhouse
