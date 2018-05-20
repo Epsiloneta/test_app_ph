@@ -1,0 +1,17 @@
+environment:
+  matrix:
+    - PYTHON: "C:\\Python27"
+    - PYTHON: "C:\\Python27-x64"
+  
+
+build_script:
+  - pip install cibuildwheel
+  - pip install pybind11
+  - cibuildwheel --output-dir wheelhouse
+
+test_script:
+  - python setup.py test
+
+artifacts:
+  - path: "wheelhouse\\*.whl"
+    name: Wheels
