@@ -20,7 +20,7 @@ install:
       
 build_script:
   - python setup.py sdist
-  - pip install cibuildwheel
+  - pip install wheel
   - pip install pybind11
   - pip wheel --no-deps --wheel-dir=wheelhouse/ . 
 
