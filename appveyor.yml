@@ -19,8 +19,10 @@ install:
 #    pip install --disable-pip-version-check --user --upgrade pip setuptools
       
 build_script:
-- ps: |
-    python setup.py sdist
+  - python setup.py sdist
+  - pip install cibuildwheel
+  - pip install pybind11
+  - cibuildwheel --output-dir wheelhouse
 
 #build_script:
 #  - '"%VS140COMNTOOLS%\..\..\VC\vcvarsall.bat" %PLATFORM%'
@@ -29,7 +31,6 @@ build_script:
 #  - cibuildwheel --output-dir wheelhouse
 
 test_script:
-  - pip install pybind11
   - python setup.py test
 
 artifacts:
