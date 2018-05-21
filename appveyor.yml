@@ -22,7 +22,7 @@ build_script:
   - python setup.py sdist
   - pip install cibuildwheel
   - pip install pybind11
-  - cibuildwheel --output-dir wheelhouse
+  - pip wheel --no-deps --wheel-dir=wheelhouse/ . 
 
 #build_script:
 #  - '"%VS140COMNTOOLS%\..\..\VC\vcvarsall.bat" %PLATFORM%'
