@@ -1,9 +1,10 @@
 from setuptools.command.build_ext import build_ext
 import sys
 import setuptools
+import subprocess
 
 ## CODE BASED ON https://github.com/pybind/python_example
-
+# AND ISSUE #32
 
 class get_pybind_include(object):
     """Helper class to determine the pybind11 include path
@@ -14,6 +15,12 @@ class get_pybind_include(object):
 
     def __init__(self, user=False):
         self.user = user
+
+        try:
+            import pybind11
+        except ImportError:
+            if subprocess.call([sys.executable, '-m', 'pip', 'install', 'pybind11']):
+                raise RuntimeError('pybind11 install failed.')
 
     def __str__(self):
         import pybind11
